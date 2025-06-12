@@ -1,0 +1,13 @@
+{
+    "domain": "alplakes",
+    "name": "Alpine Lake Temperature",
+    "version": "1.0.0",
+    "documentation": "https://github.com/phoebos02/ha-alplakes",
+    "dependencies": [],
+    "codeowners": ["phoebos02"],
+    "requirements": ["aiohttp"],
+    "iot_class": "local_polling",
+    "config_flow": true,
+    "homeassistant": "2025.4.0"
+  }
+  

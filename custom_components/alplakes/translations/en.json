@@ -1,0 +1,18 @@
+{
+    "config": {
+      "step": {
+        "user": {
+          "title": "Configure Lake Temperature Sensor",
+          "description": "Enter lake, location and depth.",
+          "data": {
+            "lake": "Lake",
+            "latitude": "Latitude",
+            "longitude": "Longitude",
+            "depth": "Depth (m)",
+            "scan_interval": "Scan interval (min)"
+          }
+        }
+      }
+    }
+  }
+  
