@@ -18,6 +18,7 @@ class LakeTemperatureSensor(Entity):
         self._attr_unique_id = f"alplakes_{lake}_{lat}_{lng}_{depth}"
         self._attr_name = f"{lake.capitalize()} Temperature ({depth} m)"
         self._attr_native_unit_of_measurement = "°C"
+        self._attr_attribution = "Data provided by Alplakes / Eawag"
 
     @property
     def state(self):
@@ -30,7 +31,7 @@ class LakeTemperatureSensor(Entity):
     @property
     def device_info(self):
         return {
-            "identifiers": {("alplakes_temperature", self.unique_id)},
+            "identifiers": {("alplakes", self.unique_id)},
             "name": f"Alplakes – {self.coordinator.lake}",
             "manufacturer": "Eawag",
             "model": "Delft3D-Flow",

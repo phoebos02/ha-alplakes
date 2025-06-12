@@ -24,7 +24,8 @@ Alplakes is a Home Assistant custom integration that fetches lake temperature da
 ## Attribution
 
 This integration uses data from the [Alplakes API](https://alplakes.eawag.ch), developed and maintained by [Eawag – Swiss Federal Institute of Aquatic Science and Technology](https://www.eawag.ch).  
-Please refer to their [website](https://alplakes.eawag.ch) for more information.
+Users must comply with the Alplakes terms of use; for full details, see Eawag’s [Legal Notice](https://www.eawag.ch/en/dataprotection-disclaimer-legalnotice) and [Legal Notice](https://www.eawag.ch/en/agb)
+
 
 ## License
 
