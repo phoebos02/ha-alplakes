@@ -1,0 +1,26 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+
+  - script: |
+      python -m pip install --upgrade pip
+      pip install pytest homeassistant pytest-homeassistant-custom-component aiohttp
+    displayName: 'Install dependencies'
+
+  - script: |
+      pytest --maxfail=1 --disable-warnings -q
+    displayName: 'Run unit tests'
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '**/junit-*.xml'
