@@ -91,7 +91,7 @@ jobs:
           host: ${{ secrets.HA_HOST }}
           username: ${{ secrets.HA_USER }}
           key: ${{ secrets.HA_SSH_KEY }}
-          script: |
+          script: 
             ha core restart
 
   # 5. End‑to‑End Test (verify sensor in running HA)
@@ -108,7 +108,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install runtime & test deps
-        run: pip install -r requirements.txt -r requirements-d
+        run: pip install -r requirements.txt -r requirements-dev.txt
         
       - name: Wait for Home Assistant to come up
         run: sleep 20
