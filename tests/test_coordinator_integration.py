@@ -1,7 +1,6 @@
 # tests/test_coordinator_integration.py
 
 import pytest
-import asyncio
 from custom_components.alplakes_temperature.coordinator import LakeDataCoordinator
 
 @pytest.mark.integration
