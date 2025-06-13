@@ -76,7 +76,8 @@ async def test_http_error_raises_update_failed():
         async def json(self): return {}
 
     class DummySession:
-        async def get(self, *args, **kwargs): return DummyResp()
+        async def get(self, *args, **kwargs):
+            return DummyResp()
 
     coord = LakeDataCoordinator(
         hass=None,
