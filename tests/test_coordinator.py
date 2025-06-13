@@ -73,7 +73,8 @@ async def test_http_error_raises_update_failed():
     # Simulate a 500 response without mocking body
     class DummyResp:
         status = 500
-        async def json(self): return {}
+        async def json(self):
+            return {}
 
     class DummySession:
         async def get(self, *args, **kwargs):
