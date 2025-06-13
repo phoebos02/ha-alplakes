@@ -12,9 +12,10 @@ statistics = True
 
 #  • Customize which error/warning codes you *don’t* care about:
 #    E203, W503 are common conflicts with black; adjust as you like.
-#ignore =
-#    E203,
-#    E501   
+ignore =
+    E302,
+    E501,
+    W291
 
 #  • Or selectively enforce only certain codes:
 #select = C,E,F,W,B,B950
