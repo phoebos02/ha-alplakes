@@ -1,13 +1,12 @@
 # tests/test_coordinator.py
-import asyncio
 import pytest
 from datetime import datetime, timedelta
-from aresponses import ResponsesMockServer
+from aresponses import ResponsesMockServer, Response
 from aiohttp import ClientSession
 from homeassistant.helpers.update_coordinator import UpdateFailed
 
-from custom_components.alplakes_temperature.coordinator import (
-    LakeDataCoordinator, BASE_URL, MODEL
+from custom_components.alplakes.coordinator import (
+    LakeDataCoordinator, MODEL
 )
 
 @pytest.fixture
@@ -30,7 +29,7 @@ async def test_successful_fetch(hass_loop):
             "alplakes-api.eawag.ch", 
             path + "?variables=temperature",
             "GET",
-            aresponses.Response(
+            Response(
                 status=200,
                 headers={"Content-Type": "application/json"},
                 text="""
