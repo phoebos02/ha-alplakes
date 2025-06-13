@@ -21,7 +21,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install dev dependencies
-        run: |
+        run:
           python -m pip install --upgrade pip
           pip install -r requirements.txt -r requirements-dev.txt
 
@@ -29,7 +29,7 @@ jobs:
         run: flake8 .
 
       - name: Type-check with mypy
-        run: mypy custom_components/ha-alplakes
+        run: mypy custom_components/alplakes
 
   # 2. Test (unit)
   unit-test:
@@ -82,8 +82,8 @@ jobs:
           host: ${{ secrets.HA_HOST }}
           username: ${{ secrets.HA_USER }}
           key: ${{ secrets.HA_SSH_KEY }}
-          source: "custom_components/ha-alplakes/"
-          target: "/config/custom_components/ha-alplakes/"
+          source: "custom_components/alplakes/"
+          target: "/config/custom_components/alplakes/"
 
       - name: Restart Home Assistant
         uses: appleboy/ssh-action@v0.1.9
@@ -108,10 +108,8 @@ jobs:
           python-version: '3.11'
 
       - name: Install runtime & test deps
-        run: |
-          python -m pip install --upgrade pip
-          pip install pytest pytest-asyncio aiohttp homeassistant==2024.4.0 pytest-homeassistant-custom-component requests
-
+        run: pip install -r requirements.txt -r requirements-d
+        
       - name: Wait for Home Assistant to come up
         run: sleep 20
 
