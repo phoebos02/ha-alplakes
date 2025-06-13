@@ -29,7 +29,7 @@ jobs:
         run: flake8 .
 
       - name: Type-check with mypy
-        run: mypy custom_components/alplakes_temperature
+        run: mypy custom_components/ha-alplakes
 
   # 2. Test (unit)
   unit-test:
@@ -82,8 +82,8 @@ jobs:
           host: ${{ secrets.HA_HOST }}
           username: ${{ secrets.HA_USER }}
           key: ${{ secrets.HA_SSH_KEY }}
-          source: "custom_components/alplakes_temperature/"
-          target: "/config/custom_components/alplakes_temperature/"
+          source: "custom_components/ha-alplakes/"
+          target: "/config/custom_components/ha-alplakes/"
 
       - name: Restart Home Assistant
         uses: appleboy/ssh-action@v0.1.9
