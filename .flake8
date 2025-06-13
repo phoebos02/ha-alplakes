@@ -14,6 +14,7 @@ statistics = True
 #    E203, W503 are common conflicts with black; adjust as you like.
 ignore =
     E302,
+    E306,
     E501,
     W291
 
