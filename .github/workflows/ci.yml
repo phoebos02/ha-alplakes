@@ -65,7 +65,7 @@ jobs:
         run: pip install -r requirements.txt -r requirements-dev.txt
         
       - name: Run integration tests
-        run: pytest -q -m integration
+        run: PYTHONPATH=. pytest -q -m integration
 
   # 4. Deploy to Testbed (AKS Home Assistant)
   deploy:
@@ -114,4 +114,4 @@ jobs:
         run: sleep 20
 
       - name: Run end-to-end tests
-        run: pytest --maxfail=1 --disable-warnings -q -m e2e
+        run: PYTHONPATH=. pytest --maxfail=1 --disable-warnings -q -m e2e
