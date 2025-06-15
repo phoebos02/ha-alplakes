@@ -3,14 +3,14 @@ import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import callback
 
-DOMAIN = "alplakes"
 VALID_LAKES = [
     "zurich", "geneva", "biel", "joux", "neuchatel", "thun", "brunnen", "lucerne"
 ]
 
-class AlplakesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
+class AlplakesConfigFlow(config_entries.ConfigFlow):
     """Handle a config flow for Alpine Lakes Temperature Sensor."""
 
+    DOMAIN = "alplakes"
     VERSION = 1
 
     async def async_step_user(self, user_input=None):

@@ -1,0 +1,86 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "🔍 Lint (flake8)",
+            "type": "process",
+            "command": "python",
+            "args": ["-m", "flake8", "."],
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "📝 Type Check (mypy)",
+            "type": "process",
+            "command": "python",
+            "args": ["-m", "mypy", "custom_components/alplakes"],
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "🧪 Unit Tests",
+            "type": "process",
+            "command": "python",
+            "args": ["-m", "pytest", "--maxfail=1", "--disable-warnings", "-q", "-m", "not integration and not e2e"],
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "🔌 Integration Tests",
+            "type": "process",
+            "command": "python",
+            "args": ["-m", "pytest", "-q", "-m", "integration"],
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "🚀 E2E Tests",
+            "type": "process",
+            "command": "python",
+            "args": ["-m", "pytest", "--maxfail=1", "--disable-warnings", "-q", "-m", "e2e"],
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "🏃‍♂️ Run All Tests",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "🔍 Lint (flake8)",
+                "📝 Type Check (mypy)",
+                "🧪 Unit Tests",
+                "🔌 Integration Tests",
+                "🚀 E2E Tests"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        }
+    ]
+}

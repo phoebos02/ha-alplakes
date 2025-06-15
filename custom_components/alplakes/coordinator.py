@@ -1,6 +1,6 @@
 import aiohttp
 import asyncio
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 BASE_URL = "https://alplakes-api.eawag.ch/simulations/point"
@@ -17,7 +17,7 @@ class LakeDataCoordinator(DataUpdateCoordinator):
 
     async def _async_update_data(self):
         try:
-            now = datetime.utcnow().replace(second=0, microsecond=0)
+            now = datetime.now(UTC).replace(second=0, microsecond=0)
             start = now.strftime("%Y%m%d%H%M")
             end = (now + timedelta(hours=1)).strftime("%Y%m%d%H%M")
 

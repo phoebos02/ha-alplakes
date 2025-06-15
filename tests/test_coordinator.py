@@ -1,92 +1,75 @@
 # tests/test_coordinator.py
 import pytest
-from datetime import datetime, timedelta
-from aresponses import ResponsesMockServer, Response
-from aiohttp import ClientSession
+from datetime import datetime, timedelta, UTC
+from unittest.mock import patch
+from unittest.mock import AsyncMock, MagicMock
 from homeassistant.helpers.update_coordinator import UpdateFailed
 
 from custom_components.alplakes.coordinator import (
     LakeDataCoordinator, MODEL
 )
 
-@pytest.fixture
-async def hass_loop(event_loop):
-    return event_loop
-
+@pytest.mark.allow_socket
 @pytest.mark.asyncio
-async def test_successful_fetch(hass_loop):
+async def test_successful_fetch():
     """Coordinator should return rounded temperature on valid JSON."""
-    # 1. Set up an aresponses server
-    async with ResponsesMockServer(loop=hass_loop) as server:
-        now = datetime.utcnow()
-        start = now.strftime("%Y%m%d%H%M")
-        end = (now + timedelta(hours=1)).strftime("%Y%m%d%H%M")
-        path = (
-            f"/simulations/point/{MODEL}/zurich/"
-            f"{start}/{end}/0.35/47.25/8.69"
-        )
-        server.add(
-            "alplakes-api.eawag.ch", 
-            path + "?variables=temperature",
-            "GET",
-            Response(
-                status=200,
-                headers={"Content-Type": "application/json"},
-                text="""
-                {
-                  "variables": {
-                    "temperature": {
-                      "data": [19.793],
-                      "unit": "degC"
-                    }
-                  }
-                }
-                """,
-            ),
-        )
+    now = datetime.now(UTC)
+    start = now.strftime("%Y%m%d%H%M")
+    end = (now + timedelta(hours=1)).strftime("%Y%m%d%H%M")
+    expected_path = (
+        f"/simulations/point/{MODEL}/zurich/"
+        f"{start}/{end}/0.35/47.25/8.69"
+    )
+    expected_url = f"https://alplakes-api.eawag.ch{expected_path}?variables=temperature"
 
-        # 2. Point coordinator at our mock server
+    # Mock response
+    mock_response = MagicMock()
+    mock_response.status = 200
+    mock_response.json = AsyncMock(return_value={
+        "variables": {
+            "temperature": {
+                "data": [19.793],
+                "unit": "degC"
+            }
+        }
+    })
+
+    # Patch ClientSession.get to return our mock_response
+    with patch("aiohttp.ClientSession.get", AsyncMock(return_value=mock_response)) as mock_get:
         coord = LakeDataCoordinator(
-            hass=None,             # not used in _async_update_data
+            hass=None,
             lake="zurich",
             latitude=47.25,
             longitude=8.69,
             depth=0.35,
             scan_interval=30
         )
-        # override the base URL to hit our mock
-        coord.session = ClientSession()
-        coord.BASE_URL = f"http://localhost:{server.port}/simulations/point"
-        coord.MODEL = MODEL
-
-        # 3. Invoke the fetch
+        # Use a real ClientSession, but get is patched
+        import aiohttp
+        coord.session = aiohttp.ClientSession()
         temp = await coord._async_update_data()
-        # 4. Assert it rounds to one decimal
         assert isinstance(temp, float)
         assert temp == round(19.793, 1)  # 19.8
-
+        mock_get.assert_called_with(expected_url, timeout=10)
         await coord.session.close()
 
 @pytest.mark.asyncio
 async def test_http_error_raises_update_failed():
     """Coordinator should wrap non-200 into UpdateFailed."""
-    # Simulate a 500 response without mocking body
-    class DummyResp:
-        status = 500
-        async def json(self):
-            return {}
+    # Mock response with status 500
+    mock_response = MagicMock()
+    mock_response.status = 500
+    mock_response.json = AsyncMock(return_value={})
 
-    class DummySession:
-        async def get(self, *args, **kwargs):
-            return DummyResp()
-
-    coord = LakeDataCoordinator(
-        hass=None,
-        lake="zurich",
-        latitude=0, longitude=0, depth=0,
-        scan_interval=30
-    )
-    coord.session = DummySession()
-
-    with pytest.raises(UpdateFailed):
-        await coord._async_update_data()
+    with patch("aiohttp.ClientSession.get", AsyncMock(return_value=mock_response)):
+        coord = LakeDataCoordinator(
+            hass=None,
+            lake="zurich",
+            latitude=0, longitude=0, depth=0,
+            scan_interval=30
+        )
+        import aiohttp
+        coord.session = aiohttp.ClientSession()
+        with pytest.raises(UpdateFailed):
+            await coord._async_update_data()
+        await coord.session.close()
