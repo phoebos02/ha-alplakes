@@ -12,7 +12,7 @@ from custom_components.alplakes.coordinator import (
 @pytest.mark.asyncio
 async def test_successful_fetch(hass):
     """Coordinator should return rounded temperature on valid JSON."""
-    hass = await hass  # Await the hass fixture
+    hass = await anext(hass)  # Get the next value from the async generator
     now = datetime.now(UTC)
     start = now.strftime("%Y%m%d%H%M")
     end = (now + timedelta(hours=1)).strftime("%Y%m%d%H%M")
@@ -57,7 +57,7 @@ async def test_successful_fetch(hass):
 @pytest.mark.asyncio
 async def test_http_error_raises_update_failed(hass):
     """Coordinator should wrap non-200 into UpdateFailed."""
-    hass = await hass  # Await the hass fixture
+    hass = await anext(hass)  # Get the next value from the async generator
     # Mock response with status 500
     mock_response = MagicMock()
     mock_response.status = 500
