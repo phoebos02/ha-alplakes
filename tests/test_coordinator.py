@@ -1,8 +1,7 @@
 # tests/test_coordinator.py
 import pytest
 from datetime import datetime, timedelta, UTC
-from unittest.mock import patch
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import patch, AsyncMock, MagicMock
 from homeassistant.helpers.update_coordinator import UpdateFailed
 
 from custom_components.alplakes.coordinator import (

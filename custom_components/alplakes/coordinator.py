@@ -8,7 +8,7 @@ MODEL = "delft3d-flow"
 
 class LakeDataCoordinator(DataUpdateCoordinator):
     def __init__(self, hass, lake, latitude, longitude, depth, scan_interval):
-        super().__init__(hass, logger=hass.logger, name="AlplakesCoordinator", update_interval=timedelta(minutes=scan_interval))
+        super().__init__(hass, name="AlplakesCoordinator", update_interval=timedelta(minutes=scan_interval))
         self.lake = lake
         self.latitude = latitude
         self.longitude = longitude
