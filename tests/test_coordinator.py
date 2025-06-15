@@ -33,8 +33,13 @@ async def test_successful_fetch():
         }
     })
 
-    # Patch ClientSession.get to return our mock_response
-    with patch("aiohttp.ClientSession.get", AsyncMock(return_value=mock_response)) as mock_get:
+    # Create a mock session that returns our mock response
+    mock_session = AsyncMock()
+    mock_session.__aenter__ = AsyncMock(return_value=mock_response)
+    mock_session.__aexit__ = AsyncMock()
+
+    # Patch ClientSession.get to return our mock session
+    with patch("aiohttp.ClientSession.get", return_value=mock_session) as mock_get:
         coord = LakeDataCoordinator(
             hass=None,
             lake="zurich",
@@ -43,14 +48,10 @@ async def test_successful_fetch():
             depth=0.35,
             scan_interval=30
         )
-        # Use a real ClientSession, but get is patched
-        import aiohttp
-        coord.session = aiohttp.ClientSession()
         temp = await coord._async_update_data()
         assert isinstance(temp, float)
         assert temp == round(19.793, 1)  # 19.8
         mock_get.assert_called_with(expected_url, timeout=10)
-        await coord.session.close()
 
 @pytest.mark.asyncio
 async def test_http_error_raises_update_failed():
@@ -60,15 +61,17 @@ async def test_http_error_raises_update_failed():
     mock_response.status = 500
     mock_response.json = AsyncMock(return_value={})
 
-    with patch("aiohttp.ClientSession.get", AsyncMock(return_value=mock_response)):
+    # Create a mock session that returns our mock response
+    mock_session = AsyncMock()
+    mock_session.__aenter__ = AsyncMock(return_value=mock_response)
+    mock_session.__aexit__ = AsyncMock()
+
+    with patch("aiohttp.ClientSession.get", return_value=mock_session):
         coord = LakeDataCoordinator(
             hass=None,
             lake="zurich",
             latitude=0, longitude=0, depth=0,
             scan_interval=30
         )
-        import aiohttp
-        coord.session = aiohttp.ClientSession()
         with pytest.raises(UpdateFailed):
             await coord._async_update_data()
-        await coord.session.close()
