@@ -1,5 +1,6 @@
 import aiohttp
 import asyncio
+import logging
 from datetime import datetime, timedelta, UTC
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
@@ -8,7 +9,8 @@ MODEL = "delft3d-flow"
 
 class LakeDataCoordinator(DataUpdateCoordinator):
     def __init__(self, hass, lake, latitude, longitude, depth, scan_interval):
-        super().__init__(hass, name="AlplakesCoordinator", update_interval=timedelta(minutes=scan_interval))
+        logger = hass.logger if hass is not None else logging.getLogger(__name__)
+        super().__init__(hass, logger=logger, name="AlplakesCoordinator", update_interval=timedelta(minutes=scan_interval))
         self.lake = lake
         self.latitude = latitude
         self.longitude = longitude
