@@ -32,6 +32,8 @@ class LakeDataCoordinator(DataUpdateCoordinator):
                 temp = data["variables"]["temperature"]["data"][0]
                 return round(float(temp), 1)
 
+        except UpdateFailed:
+            raise
         except (asyncio.TimeoutError, aiohttp.ClientError, KeyError, IndexError, ValueError) as e:
             raise UpdateFailed(f"Failed to fetch or parse data: {e}")
 
