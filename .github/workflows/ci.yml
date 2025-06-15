@@ -47,7 +47,7 @@ jobs:
         run: pip install -r requirements.txt -r requirements-dev.txt
         
       - name: Run unit tests
-        run: pytest --maxfail=1 --disable-warnings -q -m "not integration and not e2e"
+        run: PYTHONPATH=. pytest --maxfail=1 --disable-warnings -q -m "not integration and not e2e"
 
   # 3. Integration‑Test (real API)
   integration-test:
