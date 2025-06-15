@@ -73,5 +73,5 @@ async def test_http_error_raises_update_failed():
             latitude=0, longitude=0, depth=0,
             scan_interval=30
         )
-        with pytest.raises(UpdateFailed):
+        with pytest.raises(UpdateFailed, match="HTTP 500 from API"):
             await coord._async_update_data()
