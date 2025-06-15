@@ -10,7 +10,7 @@ from custom_components.alplakes.coordinator import (
 
 @pytest.mark.allow_socket
 @pytest.mark.asyncio
-async def test_successful_fetch():
+async def test_successful_fetch(hass):
     """Coordinator should return rounded temperature on valid JSON."""
     now = datetime.now(UTC)
     start = now.strftime("%Y%m%d%H%M")
@@ -41,7 +41,7 @@ async def test_successful_fetch():
     # Patch ClientSession.get to return our mock session
     with patch("aiohttp.ClientSession.get", return_value=mock_session) as mock_get:
         coord = LakeDataCoordinator(
-            hass=None,
+            hass=hass,
             lake="zurich",
             latitude=47.25,
             longitude=8.69,
@@ -54,7 +54,7 @@ async def test_successful_fetch():
         mock_get.assert_called_with(expected_url, timeout=10)
 
 @pytest.mark.asyncio
-async def test_http_error_raises_update_failed():
+async def test_http_error_raises_update_failed(hass):
     """Coordinator should wrap non-200 into UpdateFailed."""
     # Mock response with status 500
     mock_response = MagicMock()
@@ -68,7 +68,7 @@ async def test_http_error_raises_update_failed():
 
     with patch("aiohttp.ClientSession.get", return_value=mock_session):
         coord = LakeDataCoordinator(
-            hass=None,
+            hass=hass,
             lake="zurich",
             latitude=0, longitude=0, depth=0,
             scan_interval=30
