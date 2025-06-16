@@ -3,7 +3,7 @@
 import pytest
 from custom_components.alplakes.coordinator import LakeDataCoordinator
 
-@pytest.mark.allow_socket
+@pytest.mark.enable_socket
 @pytest.mark.integration
 @pytest.mark.asyncio
 async def test_live_alplakes_fetch():

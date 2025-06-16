@@ -8,7 +8,7 @@ from custom_components.alplakes.coordinator import (
     LakeDataCoordinator, MODEL
 )
 
-@pytest.mark.allow_socket
+@pytest.mark.enable_socket
 @pytest.mark.asyncio
 async def test_successful_fetch(hass):
     """Coordinator should return rounded temperature on valid JSON."""
