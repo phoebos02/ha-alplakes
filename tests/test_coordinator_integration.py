@@ -2,8 +2,6 @@
 
 import pytest
 from custom_components.alplakes.coordinator import LakeDataCoordinator
-import socket
-
 
 @pytest.mark.enable_socket
 @pytest.mark.integration
