@@ -5,7 +5,11 @@
             "label": "🔍 Lint (flake8)",
             "type": "process",
             "command": "python",
-            "args": ["-m", "flake8", "."],
+            "args": [
+                "-m",
+                "flake8",
+                "."
+            ],
             "group": "test",
             "presentation": {
                 "reveal": "always",
@@ -18,8 +22,15 @@
             "label": "📝 Type Check (mypy)",
             "type": "process",
             "command": "python",
-            "args": ["-m", "mypy", "custom_components/alplakes"],
-            "group": "test",
+            "args": [
+                "-m",
+                "mypy",
+                "custom_components/alplakes"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
             "presentation": {
                 "reveal": "always",
                 "panel": "new",
@@ -31,7 +42,15 @@
             "label": "🧪 Unit Tests",
             "type": "process",
             "command": "python",
-            "args": ["-m", "pytest", "--maxfail=1", "--disable-warnings", "-q", "-m", "not integration and not e2e"],
+            "args": [
+                "-m",
+                "pytest",
+                "--maxfail=1",
+                "--disable-warnings",
+                "-q",
+                "-m",
+                "not integration and not e2e"
+            ],
             "group": "test",
             "presentation": {
                 "reveal": "always",
@@ -44,7 +63,13 @@
             "label": "🔌 Integration Tests",
             "type": "process",
             "command": "python",
-            "args": ["-m", "pytest", "-q", "-m", "integration"],
+            "args": [
+                "-m",
+                "pytest",
+                "-q",
+                "-m",
+                "integration"
+            ],
             "group": "test",
             "presentation": {
                 "reveal": "always",
@@ -57,7 +82,15 @@
             "label": "🚀 E2E Tests",
             "type": "process",
             "command": "python",
-            "args": ["-m", "pytest", "--maxfail=1", "--disable-warnings", "-q", "-m", "e2e"],
+            "args": [
+                "-m",
+                "pytest",
+                "--maxfail=1",
+                "--disable-warnings",
+                "-q",
+                "-m",
+                "e2e"
+            ],
             "group": "test",
             "presentation": {
                 "reveal": "always",
@@ -76,10 +109,7 @@
                 "🔌 Integration Tests",
                 "🚀 E2E Tests"
             ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
+            "group": "build",
             "problemMatcher": []
         }
     ]
