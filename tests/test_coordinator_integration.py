@@ -2,11 +2,13 @@
 
 import pytest
 from custom_components.alplakes.coordinator import LakeDataCoordinator
+import socket
+
 
 @pytest.mark.enable_socket
 @pytest.mark.integration
 @pytest.mark.asyncio
-async def test_live_alplakes_fetch():
+async def test_live_alplakes_fetch(allow_socket):
     """Live integration test against alplakes.eawag.ch API."""
     # Zürichsee station location
     lat = 47.25686
