@@ -2,7 +2,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "🔍 Lint (flake8)",
+            "label": "Lint (flake8)",
             "type": "process",
             "command": "python",
             "args": [
@@ -10,6 +10,7 @@
                 "flake8",
                 "."
             ],
+            
             "group": "test",
             "presentation": {
                 "reveal": "always",
@@ -19,7 +20,7 @@
             "problemMatcher": []
         },
         {
-            "label": "📝 Type Check (mypy)",
+            "label": "Type Check (mypy)",
             "type": "process",
             "command": "python",
             "args": [
@@ -39,7 +40,7 @@
             "problemMatcher": []
         },
         {
-            "label": "🧪 Unit Tests",
+            "label": "Unit Tests",
             "type": "process",
             "command": "python",
             "args": [
@@ -60,7 +61,7 @@
             "problemMatcher": []
         },
         {
-            "label": "🔌 Integration Tests",
+            "label": "Integration Tests",
             "type": "process",
             "command": "python",
             "args": [
@@ -79,7 +80,7 @@
             "problemMatcher": []
         },
         {
-            "label": "🚀 E2E Tests",
+            "label": "E2E Tests",
             "type": "process",
             "command": "python",
             "args": [
@@ -100,14 +101,14 @@
             "problemMatcher": []
         },
         {
-            "label": "🏃‍♂️ Run All Tests",
+            "label": "Run All Tests",
             "dependsOrder": "sequence",
             "dependsOn": [
-                "🔍 Lint (flake8)",
-                "📝 Type Check (mypy)",
-                "🧪 Unit Tests",
-                "🔌 Integration Tests",
-                "🚀 E2E Tests"
+                "Lint (flake8)",
+                "Type Check (mypy)",
+                "Unit Tests",
+                "Integration Tests",
+                "E2E Tests"
             ],
             "group": "build",
             "problemMatcher": []
