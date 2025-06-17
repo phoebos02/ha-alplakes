@@ -32,10 +32,10 @@ jobs:
         run: mypy custom_components/alplakes
 
   # 2. Test (unit)
+  # if: github.event_name == 'workflow_dispatch'  # Only run on manual trigger
   unit-test:
     needs: build
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch'  # Only run on manual trigger
     steps:
       - uses: actions/checkout@v4
 
@@ -70,9 +70,10 @@ jobs:
 
   # 4. Deploy to Testbed (AKS Home Assistant)
   deploy:
-    needs: integration-test
+    needs: unit-test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
+    if: ${{github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' }}
     steps:
       - name: Check out code
         uses: actions/checkout@v4
