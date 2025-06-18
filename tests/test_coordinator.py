@@ -10,7 +10,7 @@ from custom_components.alplakes.coordinator import (
 
 @pytest.mark.enable_socket
 @pytest.mark.asyncio
-@pytest.mark.allow_hosts(['127.0.0.1','152.88.10.20'])
+@pytest.mark.allow_hosts(['127.0.0.1', '152.88.10.20'])
 async def test_successful_fetch(hass):
     """Coordinator should return rounded temperature on valid JSON."""
     hass = await anext(hass)  # Get the next value from the async generator
@@ -57,7 +57,7 @@ async def test_successful_fetch(hass):
 
 @pytest.mark.enable_socket
 @pytest.mark.asyncio
-@pytest.mark.allow_hosts(['127.0.0.1','152.88.10.20'])
+@pytest.mark.allow_hosts(['127.0.0.1', '152.88.10.20'])
 async def test_http_error_raises_update_failed(hass):
     """Coordinator should wrap non-200 into UpdateFailed."""
     hass = await anext(hass)  # Get the next value from the async generator
