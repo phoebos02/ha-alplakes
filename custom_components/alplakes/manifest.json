@@ -1,7 +1,7 @@
 {
     "domain": "alplakes",
     "name": "Alpine Lake Temperature",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "documentation": "https://github.com/phoebos02/ha-alplakes",
     "dependencies": [],
     "codeowners": ["phoebos02"],
@@ -11,4 +11,3 @@
     "homeassistant": "2025.4.0",
     "license": "BSD-3-Clause"
   }
-  
