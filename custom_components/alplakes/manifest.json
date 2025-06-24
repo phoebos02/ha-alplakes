@@ -10,4 +10,4 @@
     "config_flow": true,
     "homeassistant": "2025.4.0",
     "license": "BSD-3-Clause"
-  }
+}
