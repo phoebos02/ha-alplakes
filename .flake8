@@ -1,0 +1,31 @@
+# .flake8
+
+[flake8]
+#  • Don't break pipelines on lint failures:
+exit-zero = True
+
+#  • Show the source line for each violation:
+show-source = True
+
+#  • Print a summary of counts by code:
+statistics = True
+
+#  • Customize which error/warning codes you *don't* care about:
+#    E203, W503 are common conflicts with black; adjust as you like.
+ignore =
+    E302,
+    E306,
+    E501,
+    W291
+
+#  • Or selectively enforce only certain codes:
+#select = C,E,F,W,B,B950
+
+#  • Extend default max line length (if needed):
+#max-line-length = 100
+
+#  • Per-file ignores (e.g., allow test files to be a little sloppier):
+#per-file-ignores =
+#    tests/*: D, E501
+
+exclude = .venv,build,dist

@@ -1,6 +1,7 @@
 import aiohttp
 import asyncio
-from datetime import datetime, timedelta
+import logging
+from datetime import datetime, timedelta, UTC
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 BASE_URL = "https://alplakes-api.eawag.ch/simulations/point"
@@ -8,7 +9,8 @@ MODEL = "delft3d-flow"
 
 class LakeDataCoordinator(DataUpdateCoordinator):
     def __init__(self, hass, lake, latitude, longitude, depth, scan_interval):
-        super().__init__(hass, logger=hass.logger, name="AlplakesCoordinator", update_interval=timedelta(minutes=scan_interval))
+        logger = hass.logger if hass is not None else logging.getLogger(__name__)
+        super().__init__(hass, logger=logger, name="AlplakesCoordinator", update_interval=timedelta(minutes=scan_interval))
         self.lake = lake
         self.latitude = latitude
         self.longitude = longitude
@@ -17,19 +19,24 @@ class LakeDataCoordinator(DataUpdateCoordinator):
 
     async def _async_update_data(self):
         try:
-            now = datetime.utcnow().replace(second=0, microsecond=0)
-            start = now.strftime("%Y%m%d%H%M")
-            end = (now + timedelta(hours=1)).strftime("%Y%m%d%H%M")
+            now = datetime.now(UTC).replace(second=0, microsecond=0)
+            start_time = (now - timedelta(hours=4)).strftime("%Y%m%d%H%M")
+            end_time = now.strftime("%Y%m%d%H%M")
 
-            url = f"{BASE_URL}/{MODEL}/{self.lake}/{start}/{end}/{self.depth}/{self.latitude}/{self.longitude}?variables=temperature"
+            url = f"{BASE_URL}/{MODEL}/{self.lake}/{start_time}/{end_time}/{self.depth}/{self.latitude}/{self.longitude}?variables=temperature"
             async with self.session.get(url, timeout=10) as resp:
                 if resp.status != 200:
                     raise UpdateFailed(f"HTTP {resp.status} from API")
 
                 data = await resp.json()
-                temp = data["variables"]["temperature"]["data"][0]
+                temps = data["variables"]["temperature"]["data"]
+                if not temps:
+                    raise UpdateFailed("No temperature data returned from API")
+                temp = temps[-1]  # Take the last data point
                 return round(float(temp), 1)
 
+        except UpdateFailed:
+            raise
         except (asyncio.TimeoutError, aiohttp.ClientError, KeyError, IndexError, ValueError) as e:
             raise UpdateFailed(f"Failed to fetch or parse data: {e}")
 

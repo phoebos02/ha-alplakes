@@ -1,0 +1,119 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:   # Allows manual triggering (for e2e or deploy runs)
+
+jobs:
+  # 1. Build: install deps, lint, type‑check
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dev dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Lint with flake8
+        continue-on-error: true
+        run: flake8 .
+
+      - name: Type-check with mypy
+        run: mypy custom_components/alplakes
+
+  # 2. Test (unit)
+  # if: github.event_name == 'workflow_dispatch'  # Only run on manual trigger
+  unit-test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt -r requirements-dev.txt
+        
+      - name: Run unit tests
+        run: PYTHONPATH=. pytest --maxfail=1 --disable-warnings -q -m "not integration and not e2e"
+
+  # 3. Integration‑Test (real API)
+  integration-test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt -r requirements-dev.txt
+        
+      - name: Run integration tests
+        run: PYTHONPATH=. pytest -q -m integration
+
+  # 4. Deploy to Testbed (AKS Home Assistant)
+  deploy:
+    needs: unit-test
+    runs-on: ubuntu-latest
+    if: ${{github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Copy to Home Assistant testbed via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HA_HOST }}
+          username: ${{ secrets.HA_USER }}
+          key: ${{ secrets.HA_SSH_KEY }}
+          source: "custom_components/alplakes/*"
+          target: "/config/custom_components/alplakes/"
+
+      - name: Restart Home Assistant
+        uses: appleboy/ssh-action@v0.1.9
+        with:
+          host: ${{ secrets.HA_HOST }}
+          username: ${{ secrets.HA_USER }}
+          key: ${{ secrets.HA_SSH_KEY }}
+          script: 
+            ha core restart
+
+  # 5. End‑to‑End Test (verify sensor in running HA)
+  e2e-test:
+    needs: deploy
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install runtime & test deps
+        run: pip install -r requirements.txt -r requirements-dev.txt
+        
+      - name: Wait for Home Assistant to come up
+        run: sleep 20
+
+      - name: Run end-to-end tests
+        run: PYTHONPATH=. pytest --maxfail=1 --disable-warnings -q -m e2e
