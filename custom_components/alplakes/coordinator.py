@@ -20,16 +20,19 @@ class LakeDataCoordinator(DataUpdateCoordinator):
     async def _async_update_data(self):
         try:
             now = datetime.now(UTC).replace(second=0, microsecond=0)
-            start = now.strftime("%Y%m%d%H%M")
-            end = (now + timedelta(hours=1)).strftime("%Y%m%d%H%M")
+            start_time = (now - timedelta(hours=4)).strftime("%Y%m%d%H%M")
+            end_time = now.strftime("%Y%m%d%H%M")
 
-            url = f"{BASE_URL}/{MODEL}/{self.lake}/{start}/{end}/{self.depth}/{self.latitude}/{self.longitude}?variables=temperature"
+            url = f"{BASE_URL}/{MODEL}/{self.lake}/{start_time}/{end_time}/{self.depth}/{self.latitude}/{self.longitude}?variables=temperature"
             async with self.session.get(url, timeout=10) as resp:
                 if resp.status != 200:
                     raise UpdateFailed(f"HTTP {resp.status} from API")
 
                 data = await resp.json()
-                temp = data["variables"]["temperature"]["data"][0]
+                temps = data["variables"]["temperature"]["data"]
+                if not temps:
+                    raise UpdateFailed("No temperature data returned from API")
+                temp = temps[-1]  # Take the last data point
                 return round(float(temp), 1)
 
         except UpdateFailed:
