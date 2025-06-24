@@ -1,0 +1,9 @@
+{
+    "name": "Alpine Lake Temperature",
+    "content_in_root": false,
+    "domains": ["alplakes"],
+    "country": "CH",
+    "homeassistant": "2025.4.0",
+    "render_readme": true
+  }
+  
