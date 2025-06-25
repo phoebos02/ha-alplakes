@@ -7,8 +7,13 @@ from .const import BASE_URL, MODEL
 
 class LakeDataCoordinator(DataUpdateCoordinator):
     def __init__(self, hass, lake, latitude, longitude, depth, scan_interval):
-        logger = hass.logger if hass is not None else logging.getLogger(__name__)
-        super().__init__(hass, logger=logger, name="AlplakesCoordinator", update_interval=timedelta(minutes=scan_interval))
+        logger = logging.getLogger(__name__)
+        super().__init__(
+            hass,
+            logger=logger,
+            name="AlplakesCoordinator",
+            update_interval=timedelta(minutes=scan_interval),
+        )
         self.lake = lake
         self.latitude = latitude
         self.longitude = longitude
