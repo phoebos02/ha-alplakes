@@ -3,6 +3,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from .coordinator import LakeDataCoordinator
+from homeassistant.components.sensor import SensorEntity
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback):
     data = entry.data
@@ -12,7 +13,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
     await coordinator.async_config_entry_first_refresh()
     async_add_entities([LakeTemperatureSensor(coordinator, lake, lat, lng, depth)])
 
-class LakeTemperatureSensor(Entity):
+class LakeTemperatureSensor(SensorEntity):
     def __init__(self, coordinator, lake, lat, lng, depth):
         self.coordinator = coordinator
         self._attr_unique_id = f"alplakes_{lake}_{lat}_{lng}_{depth}"
