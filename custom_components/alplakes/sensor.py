@@ -17,12 +17,12 @@ class LakeTemperatureSensor(SensorEntity):
     def __init__(self, coordinator, lake, lat, lng, depth):
         self.coordinator = coordinator
         self._attr_unique_id = f"alplakes_{lake}_{lat}_{lng}_{depth}"
-        self._attr_name = f"{lake.capitalize()} Temperature ({depth} m)"
+        self._attr_name = f"{lake} Temperature ({depth} m)"
         self._attr_native_unit_of_measurement = "°C"
         self._attr_attribution = "Data provided by Alplakes / Eawag"
 
     @property
-    def state(self):
+    def native_value(self):
         return self.coordinator.data
 
     @property
