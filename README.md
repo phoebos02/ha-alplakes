@@ -10,12 +10,10 @@ Alplakes is a Home Assistant custom integration that fetches lake temperature da
 - Polls the Alplakes “simulations” endpoint [Delft3D-FLOW simulations](https://alplakes.eawag.ch/) on a user-configurable intervall (default: every 30 minutes)
 - Supports multiple sensors (measurement stations) via UI configuration. One sensor per configured lake/latitude/longitude/depth point  
 
-
 ## Installation (via HACS)
 
 1. Go to **HACS → Integrations → ⋯ → Custom repositories**
-2. Add this repo:  
-   `https://github.com/phoebos02/alplakes-ha`  
+2. Add this repo: `https://github.com/phoebos02/alplakes-ha`  
    Category: *Integration*
 3. Search for `Alplakes` in HACS and install
 4. Restart Home Assistant
