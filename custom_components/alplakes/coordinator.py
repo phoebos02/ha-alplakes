@@ -3,9 +3,7 @@ import asyncio
 import logging
 from datetime import datetime, timedelta, UTC
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
-
-BASE_URL = "https://alplakes-api.eawag.ch/simulations/point"
-MODEL = "delft3d-flow"
+from .const import BASE_URL, MODEL
 
 class LakeDataCoordinator(DataUpdateCoordinator):
     def __init__(self, hass, lake, latitude, longitude, depth, scan_interval):

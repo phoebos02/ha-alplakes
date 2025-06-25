@@ -3,18 +3,7 @@ import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import callback
 
-from .const import DOMAIN
-
-# Predefined list of valid lake names
-VALID_LAKES = [
-    "zurich", "geneva", "biel", "joux", "neuchatel", "thun", "brunnen", "lucerne"
-]
-# Default configurations
-DEFAULT_LAKE = "zurich"
-DEFAULT_LATITUDE = 47.36539
-DEFAULT_LONGITUDE = 8.54305
-DEFAULT_DEPTH = 1.0
-DEFAULT_SCAN_INTERVAL = 30
+from .const import DOMAIN, VALID_LAKES, DEFAULT_LAKE, DEFAULT_LATITUDE, DEFAULT_LONGITUDE, DEFAULT_DEPTH, DEFAULT_SCAN_INTERVAL
 
 class AlplakesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Alpine Lakes Temperature."""
