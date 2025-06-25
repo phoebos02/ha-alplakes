@@ -3,6 +3,7 @@ import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import callback
 from .const import DOMAIN, VALID_LAKES, DEFAULT_LAKE, DEFAULT_LATITUDE, DEFAULT_LONGITUDE, DEFAULT_DEPTH, DEFAULT_SCAN_INTERVAL, DEFAULT_LOCATION_NAME
+import re
 
 class AlplakesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Alpine Lakes Temperature."""
@@ -28,7 +29,7 @@ class AlplakesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self.data = user_input
 
         self.data['location_name'] = re.sub(r'\W+', '', self.data['location_name'].lower())
-        unique_id = f"lake_{self.data['lake']}_{sanitized_location}"
+        unique_id = f"lake_{self.data['lake']}_{self.data['location_name']}"
         await self.async_set_unique_id(unique_id)
         self._abort_if_unique_id_configured()
 

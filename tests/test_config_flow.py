@@ -36,4 +36,4 @@ async def test_create_entry_from_user_input(hass):
     result = await flow.async_step_user(user_input)
     assert result["type"] == data_entry_flow.RESULT_TYPE_CREATE_ENTRY
     assert result["title"].startswith(f"Lake {user_input['lake']}")
-    assert result["data"] == user_input 
+    assert result["data"] == user_input
