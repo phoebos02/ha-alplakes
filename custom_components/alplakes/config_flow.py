@@ -3,47 +3,48 @@ import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import callback
 
+from .const import DOMAIN
+
+# Predefined list of valid lake names
 VALID_LAKES = [
     "zurich", "geneva", "biel", "joux", "neuchatel", "thun", "brunnen", "lucerne"
 ]
+# Default configurations
+DEFAULT_LAKE = "zurich"
+DEFAULT_LATITUDE = 47.36539
+DEFAULT_LONGITUDE = 8.54305
+DEFAULT_DEPTH = 1.0
+DEFAULT_SCAN_INTERVAL = 30
 
-class AlplakesConfigFlow(config_entries.ConfigFlow):
-    """Handle a config flow for Alpine Lakes Temperature Sensor."""
+class AlplakesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
+    """Handle a config flow for Alpine Lakes Temperature."""
 
-    DOMAIN = "alplakes"
     VERSION = 1
+
+    def __init__(self):
+        self.data = {}
 
     async def async_step_user(self, user_input=None):
         """Step 1: User provides lake, latitude, longitude, depth, scan_interval."""
-        data_schema = vol.Schema({
-            vol.Required("lake", default=user_input.get("lake", "zurich")): vol.In(VALID_LAKES),
-            vol.Required("latitude", default=user_input.get("latitude", 47.36539)): float,
-            vol.Required("longitude", default=user_input.get("longitude", 8.54305)): float,
-            vol.Required("depth", default=user_input.get("depth", 1.0)): float,
-            vol.Required("scan_interval", default=user_input.get("scan_interval", 30)): int,
-        })
-
         if user_input is None:
+            data_schema = vol.Schema({
+                vol.Required("lake", default=DEFAULT_LAKE): vol.In(VALID_LAKES),
+                vol.Required("latitude", default=DEFAULT_LATITUDE): float,
+                vol.Required("longitude", default=DEFAULT_LONGITUDE): float,
+                vol.Required("depth", default=DEFAULT_DEPTH): float,
+                vol.Required("scan_interval", default=DEFAULT_SCAN_INTERVAL): int,
+            })
             return self.async_show_form(step_id="user", data_schema=data_schema)
 
-        # Construct a unique ID string to prevent duplicates
-        lake = user_input["lake"]
-        latitude = user_input["latitude"]
-        longitude = user_input["longitude"]
-        depth = user_input["depth"]
-        unique_id = f"{lake}_{latitude}_{longitude}_{depth}"
+        self.data = user_input
+
+        unique_id = f"Lake_{self.data['lake']}_{self.data['latitude']}_{self.data['longitude']}_{self.data['depth']}"
         await self.async_set_unique_id(unique_id)
         self._abort_if_unique_id_configured()
 
         return self.async_create_entry(
-            title=f"{lake.capitalize()} ({latitude}, {longitude}, {depth} m)",
-            data={
-                "lake": lake,
-                "latitude": latitude,
-                "longitude": longitude,
-                "depth": depth,
-                "scan_interval": user_input["scan_interval"],
-            },
+            title=f"Lake {self.data['lake']} ({self.data['latitude']}, {self.data['longitude']})",
+            data=self.data,
         )
 
     @staticmethod
@@ -60,12 +61,11 @@ class AlplakesOptionsFlowHandler(config_entries.OptionsFlow):
 
     async def async_step_init(self, user_input=None):
         """Present a form to update only scan_interval."""
-        initial_interval = self.config_entry.data.get("scan_interval", 30)
-        data_schema = vol.Schema({
-            vol.Required("scan_interval", default=user_input.get("scan_interval", initial_interval)): int,
-        })
-
+        initial_interval = self.config_entry.data.get("scan_interval", DEFAULT_SCAN_INTERVAL)
         if user_input is None:
+            data_schema = vol.Schema({
+                vol.Required("scan_interval", default=initial_interval): int,
+            })
             return self.async_show_form(step_id="init", data_schema=data_schema)
 
         return self.async_create_entry(
