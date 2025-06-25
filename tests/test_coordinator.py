@@ -48,7 +48,8 @@ async def test_successful_fetch(hass):
             latitude=47.25,
             longitude=8.69,
             depth=0.35,
-            scan_interval=30
+            scan_interval=30,
+            location_name="UnitTestLocation"
         )
         temp = await coord._async_update_data()
         assert isinstance(temp, float)
@@ -76,7 +77,8 @@ async def test_http_error_raises_update_failed(hass):
             hass=hass,
             lake="zurich",
             latitude=0, longitude=0, depth=0,
-            scan_interval=30
+            scan_interval=30,
+            location_name="UnitTestLocation"
         )
         with pytest.raises(UpdateFailed, match="HTTP 500 from API"):
             await coord._async_update_data()

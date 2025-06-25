@@ -12,6 +12,7 @@ async def test_show_user_form(hass):
     schema = result["data_schema"]
     # Check that the schema has the expected defaults
     assert schema({})["lake"] == DEFAULT_LAKE
+    assert schema({})["location_name"] == "Main"
     assert schema({})["latitude"] == DEFAULT_LATITUDE
     assert schema({})["longitude"] == DEFAULT_LONGITUDE
     assert schema({})["depth"] == DEFAULT_DEPTH
@@ -24,6 +25,7 @@ async def test_create_entry_from_user_input(hass):
     flow.hass = hass
     user_input = {
         "lake": VALID_LAKES[1],
+        "location_name": "TestLocation",
         "latitude": 46.2,
         "longitude": 6.1,
         "depth": 2.5,

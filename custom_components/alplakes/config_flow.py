@@ -2,8 +2,7 @@
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import callback
-
-from .const import DOMAIN, VALID_LAKES, DEFAULT_LAKE, DEFAULT_LATITUDE, DEFAULT_LONGITUDE, DEFAULT_DEPTH, DEFAULT_SCAN_INTERVAL
+from .const import DOMAIN, VALID_LAKES, DEFAULT_LAKE, DEFAULT_LATITUDE, DEFAULT_LONGITUDE, DEFAULT_DEPTH, DEFAULT_SCAN_INTERVAL, DEFAULT_LOCATION_NAME
 
 class AlplakesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Alpine Lakes Temperature."""
@@ -18,6 +17,7 @@ class AlplakesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is None:
             data_schema = vol.Schema({
                 vol.Required("lake", default=DEFAULT_LAKE): vol.In(VALID_LAKES),
+                vol.Required("location_name", default=DEFAULT_LOCATION_NAME): str,
                 vol.Required("latitude", default=DEFAULT_LATITUDE): float,
                 vol.Required("longitude", default=DEFAULT_LONGITUDE): float,
                 vol.Required("depth", default=DEFAULT_DEPTH): float,
@@ -27,12 +27,13 @@ class AlplakesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         self.data = user_input
 
-        unique_id = f"Lake_{self.data['lake']}_{self.data['latitude']}_{self.data['longitude']}_{self.data['depth']}"
+        self.data['location_name'] = re.sub(r'\W+', '', self.data['location_name'].lower())
+        unique_id = f"lake_{self.data['lake']}_{sanitized_location}"
         await self.async_set_unique_id(unique_id)
         self._abort_if_unique_id_configured()
 
         return self.async_create_entry(
-            title=f"Lake {self.data['lake']} ({self.data['latitude']}, {self.data['longitude']})",
+            title=f"Lake {self.data['lake'].capitalize()} - {self.data['location_name'].capitalize()} ({self.data['latitude']}, {self.data['longitude']})",
             data=self.data,
         )
 

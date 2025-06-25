@@ -6,7 +6,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 from .const import BASE_URL, MODEL
 
 class LakeDataCoordinator(DataUpdateCoordinator):
-    def __init__(self, hass, lake, latitude, longitude, depth, scan_interval):
+    def __init__(self, hass, lake, latitude, longitude, depth, scan_interval, location_name):
         logger = logging.getLogger(__name__)
         super().__init__(
             hass,
@@ -18,6 +18,7 @@ class LakeDataCoordinator(DataUpdateCoordinator):
         self.latitude = latitude
         self.longitude = longitude
         self.depth = depth
+        self.location_name = location_name
         self.session = aiohttp.ClientSession()
 
     async def _async_update_data(self):
