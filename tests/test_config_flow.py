@@ -8,7 +8,7 @@ async def test_show_user_form(hass):
     flow = AlplakesConfigFlow()
     flow.hass = hass
     result = await flow.async_step_user()
-    assert result["type"] == data_entry_flow.RESULT_TYPE_FORM
+    assert result["type"] == "form"
     schema = result["data_schema"]
     # Check that the schema has the expected defaults
     assert schema({})["lake"] == DEFAULT_LAKE
@@ -34,6 +34,6 @@ async def test_create_entry_from_user_input(hass):
     # Patch unique_id check to not abort
     flow._abort_if_unique_id_configured = lambda: None
     result = await flow.async_step_user(user_input)
-    assert result["type"] == data_entry_flow.RESULT_TYPE_CREATE_ENTRY
+    assert result["type"] == "create_entry"
     assert result["title"].startswith(f"Lake {user_input['lake']}")
     assert result["data"] == user_input
