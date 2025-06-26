@@ -1,7 +1,7 @@
 {
     "domain": "alplakes",
     "name": "Alplakes Alpine Lake Temperature",
-    "version": "0.2.1-beta.3",
+    "version": "0.2.1-beta.4",
     "documentation": "https://github.com/phoebos02/ha-alplakes",
     "issue_tracker": "https://github.com/phoebos02/ha-alplakes/issues",
     "dependencies": [],
