@@ -34,7 +34,6 @@ or
 2. Add this repo: `https://github.com/phoebos02/alplakes-ha`  
    Category: *Integration*
 
-
 3. Search for `Alplakes` in HACS and install
 
 then
@@ -45,8 +44,7 @@ then
 ## Attribution
 
 This integration uses data from the [Alplakes API](https://alplakes.eawag.ch), developed and 
-maintained by [Eawag – Swiss Federal Institute of Aquatic Science and Technology](https://www.
-eawag.ch).  
+maintained by [Eawag – Swiss Federal Institute of Aquatic Science and Technology](https://www.eawag.ch).  
 Users must comply with the Alplakes terms of use; for full details, see Eawag's [Legal Notice](https://www.eawag.ch/en/dataprotection-disclaimer-legalnotice) and [AGB](https://www.eawag.ch/en/agb).
 
 This project and its author are not affiliated with Alplakes or Eawag in any way.
