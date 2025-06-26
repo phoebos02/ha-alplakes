@@ -9,6 +9,11 @@ sys.path.insert(0, project_root)
 
 @pytest.hookimpl(trylast=True)
 def pytest_runtest_setup():
-    # Re-enable sockets and allow our hosts
+    """Re-enable sockets and allow specific hosts before each test."""
     enable_socket()
     socket_allow_hosts(["127.0.0.1", "152.88.10.20"], allow_unix_socket=True)
+
+@pytest.fixture(autouse=True)
+def enable_custom_integrations(enable_custom_integrations):
+    """Enable loading of custom integrations."""
+    yield

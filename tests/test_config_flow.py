@@ -2,6 +2,8 @@ import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 from custom_components.alplakes.const import DOMAIN, DEFAULT_LOCATION_NAME, DEFAULT_LAKE, DEFAULT_LATITUDE, DEFAULT_LONGITUDE, DEFAULT_DEPTH, DEFAULT_SCAN_INTERVAL
 
+pytest_plugins = "pytest_homeassistant_custom_component"
+
 @pytest.mark.asyncio
 async def test_flow_user_success(hass):
     """Test completing the user config flow."""
