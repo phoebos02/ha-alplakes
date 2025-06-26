@@ -3,7 +3,10 @@ permissions:
   contents: read
 on:
   push:
+    branches: [ main ]
   pull_request:
+    branches: [ main ]
+  workflow_dispatch:   # Allows manual triggering
   schedule:
     - cron: "0 0 * * *"
 
