@@ -1,6 +1,6 @@
 <!-- Logo centered -->
 <p align="center">
-  <img src="images/logo.png" alt="Alplakes Logo" width="256">
+  <img src="https://raw.githubusercontent.com/eawag-surface-waters-research/alplakes-react/master/public/img/logo.png" alt="Alplakes Logo" width="256">
 </p>
 
 # Alplakes
