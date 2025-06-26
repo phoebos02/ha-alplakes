@@ -3,18 +3,22 @@ import asyncio
 import logging
 from datetime import datetime, timedelta, UTC
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
-
-BASE_URL = "https://alplakes-api.eawag.ch/simulations/point"
-MODEL = "delft3d-flow"
+from .const import BASE_URL, MODEL
 
 class LakeDataCoordinator(DataUpdateCoordinator):
-    def __init__(self, hass, lake, latitude, longitude, depth, scan_interval):
-        logger = hass.logger if hass is not None else logging.getLogger(__name__)
-        super().__init__(hass, logger=logger, name="AlplakesCoordinator", update_interval=timedelta(minutes=scan_interval))
+    def __init__(self, hass, lake, latitude, longitude, depth, scan_interval, location_name):
+        logger = logging.getLogger(__name__)
+        super().__init__(
+            hass,
+            logger=logger,
+            name="AlplakesCoordinator",
+            update_interval=timedelta(minutes=scan_interval),
+        )
         self.lake = lake
         self.latitude = latitude
         self.longitude = longitude
         self.depth = depth
+        self.location_name = location_name
         self.session = aiohttp.ClientSession()
 
     async def _async_update_data(self):

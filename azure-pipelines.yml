@@ -13,8 +13,17 @@ steps:
 
   - script: |
       python -m pip install --upgrade pip
-      pip install pytest homeassistant pytest-homeassistant-custom-component aiohttp
+      pip install pytest homeassistant pytest-homeassistant-custom-component aiohttp flake8 mypy
     displayName: 'Install dependencies'
+
+  - script: |
+      flake8 .
+    displayName: 'Lint with flake8'
+    continueOnError: 'true'
+
+  - script: |
+      mypy custom_components/alplakes
+    displayName: 'Type-check with mypy'
 
   - script: |
       pytest --maxfail=1 --disable-warnings -q

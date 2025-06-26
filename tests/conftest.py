@@ -11,4 +11,4 @@ sys.path.insert(0, project_root)
 def pytest_runtest_setup():
     # Re-enable sockets and allow our hosts
     enable_socket()
-    socket_allow_hosts(["127.0.0.1","152.88.10.20"], allow_unix_socket=True)
+    socket_allow_hosts(["127.0.0.1", "152.88.10.20"], allow_unix_socket=True)

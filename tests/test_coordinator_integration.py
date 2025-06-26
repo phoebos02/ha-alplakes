@@ -20,7 +20,8 @@ async def test_live_alplakes_fetch(socket_enabled):
         latitude=lat,
         longitude=lon,
         depth=depth,
-        scan_interval=30
+        scan_interval=30,
+        location_name="IntegrationTestLocation"
     )
 
     temperature = await coord._async_update_data()
