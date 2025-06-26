@@ -1,7 +1,6 @@
 {
   "name": "Alplakes Alpine Lake Temperature",
   "content_in_root": false,
-  "domains": ["alplakes"],
   "homeassistant": "2025.4.0",
   "render_readme": true
 }
