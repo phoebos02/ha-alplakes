@@ -1,13 +1,16 @@
 {
     "domain": "alplakes",
-    "name": "Alpine Lake Temperature",
-    "version": "0.2.0",
+    "name": "Alplakes Alpine Lake Temperature",
+    "version": "0.2.1-beta.1",
     "documentation": "https://github.com/phoebos02/ha-alplakes",
+    "issue_tracker": "https://github.com/phoebos02/ha-alplakes/issues",
     "dependencies": [],
-    "codeowners": ["phoebos02"],
-    "requirements": ["aiohttp"],
+    "codeowners": ["@phoebos02"],
+    "requirements": [],
     "iot_class": "local_polling",
     "config_flow": true,
     "homeassistant": "2025.4.0",
-    "license": "BSD-3-Clause"
+    "license": "BSD-3-Clause",
+    "logo": "custom_components/alplakes/logo.png",
+    "icon": "custom_components/alplakes/icon.png"
 }

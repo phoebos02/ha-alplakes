@@ -1,7 +1,8 @@
 {
-    "name": "Alpine Lake Temperature",
+    "name": "Alplakes Alpine Lake Temperature",
     "content_in_root": false,
     "domains": ["alplakes"],
     "homeassistant": "2025.4.0",
-    "render_readme": true
+    "render_readme": true,
+    "icon": "custom_components/alplakes/icon.png"
   }
