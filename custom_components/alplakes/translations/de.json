@@ -1,0 +1,18 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Konfiguriere einen Seetemperatursensor",
+        "description": "Geben Sie See, Standort und Tiefe ein. Koordinaten finden Sie [hier](https://www.latlong.net).",
+        "data": {
+          "lake": "See",
+          "location_name": "Standortname",
+          "latitude": "Breitengrad",
+          "longitude": "Längengrad",
+          "depth": "Tiefe (m)",
+          "scan_interval": "Abfrageintervall (min)"
+        }
+      }
+    }
+  }
+}

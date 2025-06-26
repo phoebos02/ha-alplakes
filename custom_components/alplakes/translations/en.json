@@ -2,8 +2,8 @@
     "config": {
       "step": {
         "user": {
-          "title": "Configure Lake Temperature Sensor",
-          "description": "Enter lake, location and depth.",
+          "title": "Configure a Lake Temperature Sensor",
+          "description": "Enter lake, location and depth. Find your coordinates [here](https://www.latlong.net).",
           "data": {
             "lake": "Lake",
             "location_name": "Location Name",
@@ -16,4 +16,5 @@
       }
     }
   }
+}
   
