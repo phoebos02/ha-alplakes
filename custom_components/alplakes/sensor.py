@@ -26,6 +26,10 @@ class LakeTemperatureSensor(SensorEntity):
         self._attr_attribution = "Data provided by Alplakes / Eawag"
 
     @property
+    def icon(self):
+        return "mdi:coolant-temperature"
+
+    @property
     def native_value(self):
         return self.coordinator.data
 
