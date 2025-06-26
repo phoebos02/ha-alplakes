@@ -21,7 +21,7 @@ class AlplakesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Required("location_name", default=DEFAULT_LOCATION_NAME): str,
                 vol.Required("latitude", default=DEFAULT_LATITUDE): float,
                 vol.Required("longitude", default=DEFAULT_LONGITUDE): float,
-                vol.Required("depth", default=DEFAULT_DEPTH): float,
+                vol.Required("depth", default=DEFAULT_DEPTH): vol.Coerce(float),
                 vol.Required("scan_interval", default=DEFAULT_SCAN_INTERVAL): int,
             })
             return self.async_show_form(step_id="user", data_schema=data_schema)

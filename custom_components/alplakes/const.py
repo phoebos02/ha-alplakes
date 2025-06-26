@@ -6,11 +6,11 @@ VALID_LAKES = [
 ]
 # Default configurations
 DEFAULT_LAKE = "zurich"
-DEFAULT_LATITUDE = 47.36539
-DEFAULT_LONGITUDE = 8.54305
-DEFAULT_DEPTH = 1.0
+DEFAULT_LATITUDE = 47.255
+DEFAULT_LONGITUDE = 8.688
+DEFAULT_DEPTH = 0.1
 DEFAULT_SCAN_INTERVAL = 10
-DEFAULT_LOCATION_NAME = "Zurich"
+DEFAULT_LOCATION_NAME = "Männedorf"
 
 BASE_URL = "https://alplakes-api.eawag.ch/simulations/point"
-MODEL = "delft3d-flow" 
+MODEL = "delft3d-flow"

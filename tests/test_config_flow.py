@@ -1,6 +1,5 @@
 import pytest
-from custom_components.alplakes.config_flow import AlplakesConfigFlow, VALID_LAKES, DEFAULT_LAKE, DEFAULT_LATITUDE, DEFAULT_LONGITUDE, DEFAULT_DEPTH, DEFAULT_SCAN_INTERVAL
-from homeassistant import data_entry_flow
+from custom_components.alplakes.config_flow import AlplakesConfigFlow, VALID_LAKES, DEFAULT_LOCATION_NAME, DEFAULT_LAKE, DEFAULT_LATITUDE, DEFAULT_LONGITUDE, DEFAULT_DEPTH, DEFAULT_SCAN_INTERVAL
 
 @pytest.mark.asyncio
 async def test_show_user_form(hass):
@@ -12,7 +11,7 @@ async def test_show_user_form(hass):
     schema = result["data_schema"]
     # Check that the schema has the expected defaults
     assert schema({})["lake"] == DEFAULT_LAKE
-    assert schema({})["location_name"] == "Main"
+    assert schema({})["location_name"] == DEFAULT_LOCATION_NAME
     assert schema({})["latitude"] == DEFAULT_LATITUDE
     assert schema({})["longitude"] == DEFAULT_LONGITUDE
     assert schema({})["depth"] == DEFAULT_DEPTH
