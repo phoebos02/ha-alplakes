@@ -1,13 +1,14 @@
 {
     "domain": "alplakes",
     "name": "Alplakes Alpine Lake Temperature",
-    "version": "0.2.1-beta.8",
+    "version": "0.2.1-beta.9",
     "documentation": "https://github.com/phoebos02/ha-alplakes",
     "issue_tracker": "https://github.com/phoebos02/ha-alplakes/issues",
-    "dependencies": [],
     "codeowners": ["@phoebos02"],
-    "requirements": [],
     "integration_type" : "device",
     "iot_class": "local_polling",
-    "config_flow": true
+    "config_flow": true,
+    "loggers": ["alplakes"],
+    "dependencies": [],
+    "requirements": []
 }
