@@ -1,4 +1,5 @@
 import pytest
+from unittest.mock import MagicMock
 from custom_components.alplakes.config_flow import AlplakesConfigFlow, VALID_LAKES, DEFAULT_LOCATION_NAME, DEFAULT_LAKE, DEFAULT_LATITUDE, DEFAULT_LONGITUDE, DEFAULT_DEPTH, DEFAULT_SCAN_INTERVAL
 
 @pytest.mark.asyncio
@@ -6,6 +7,11 @@ async def test_show_user_form(hass):
     """Test that the user step shows the form with defaults when no input is provided."""
     flow = AlplakesConfigFlow()
     flow.hass = hass
+    # Patch config_entries.flow.async_progress_by_handler
+    if not hasattr(hass, "config_entries"):
+        hass.config_entries = MagicMock()
+        hass.config_entries.flow = MagicMock()
+    hass.config_entries.flow.async_progress_by_handler = MagicMock(return_value=[])
     result = await flow.async_step_user()
     assert result["type"] == "form"
     schema = result["data_schema"]
@@ -22,6 +28,11 @@ async def test_create_entry_from_user_input(hass):
     """Test that the user step creates an entry when valid input is provided."""
     flow = AlplakesConfigFlow()
     flow.hass = hass
+    # Patch config_entries.flow.async_progress_by_handler
+    if not hasattr(hass, "config_entries"):
+        hass.config_entries = MagicMock()
+        hass.config_entries.flow = MagicMock()
+    hass.config_entries.flow.async_progress_by_handler = MagicMock(return_value=[])
     user_input = {
         "lake": VALID_LAKES[1],
         "location_name": "TestLocation",

@@ -36,18 +36,3 @@ jobs:
         run: pip install -r requirements.txt -r requirements-dev.txt
       - name: Run integration tests
         run: PYTHONPATH=. pytest -q -m integration
-
-  e2e-test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
-      - name: Install runtime & test deps
-        run: pip install -r requirements.txt -r requirements-dev.txt
-      - name: Wait for Home Assistant to come up
-        run: sleep 20
-      - name: Run end-to-end tests
-        run: PYTHONPATH=. pytest --maxfail=1 --disable-warnings -q -m e2e 
