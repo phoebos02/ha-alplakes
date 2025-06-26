@@ -1,10 +1,9 @@
+# Alplakes
+
 <!-- Logo centered -->
 <p align="center">
   <img src="https://raw.githubusercontent.com/eawag-surface-waters-research/alplakes-react/master/public/img/logo.png" alt="Alplakes Logo" width="256">
 </p>
-
-# Alplakes
-
 
 [![Release](https://img.shields.io/github/v/release/phoebos02/ha-alplakes?style=flat-square)](https://github.com/phoebos02/ha-alplakes/releases/latest)
 [![HACS](https://img.shields.io/badge/HACS-custom-orange?style=flat-square)](https://hacs.xyz/)
@@ -12,7 +11,7 @@
 [![HACS](https://github.com/phoebos02/ha-alplakes/actions/workflows/hacs.yml/badge.svg)](https://github.com/phoebos02/ha-alplakes/actions/workflows/hacs.yml)
 [![Hassfest](https://github.com/phoebos02/ha-alplakes/actions/workflows/hassfest.yml/badge.svg)](https://github.com/phoebos02/ha-alplakes/actions/workflows/hassfest.yml)
 [![CI](https://github.com/phoebos02/ha-alplakes/actions/workflows/ci.yml/badge.svg)](https://github.com/phoebos02/ha-alplakes/actions/workflows/ci.yml)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/phoebos02/ha-alplakes/ci.yml?style=flat-square)](https://github.com/phoebos02/ha-alplakes/actions)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/phoebos02/ha-alplakes/ci.yml?style=flat-square)](https://github.com/phoebos02/ha-alplakes/ci.yml)
 
 Alplakes is a Home Assistant custom integration that fetches lake temperature data from the Eawag Alplakes API (simulations, Delft3D-Flow model) and exposes it as sensor entities. Each configured “point” (lake, latitude, longitude, depth) becomes one temperature sensor, updated on a user-configurable interval.
 
