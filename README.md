@@ -20,7 +20,13 @@ Alplakes is a Home Assistant custom integration that fetches lake temperature da
 - Retrieves modeled water temperature at specific coordinates and depth
 - Polls the Alplakes “simulations” endpoint [Delft3D-FLOW simulations](https://alplakes.eawag.ch/) on a user-configurable intervall (default: every 10 minutes)
 - Supports multiple sensors (measurement stations) via UI configuration. One sensor per configured lake/latitude/longitude/depth point
-![Sensor Card](assets/sensor-card.png)![sensor-history](assets/sensor-history.png)
+
+<p align="center">
+  <img src="assets/sensor-card.png" width="45%" />
+  <img src="assets/sensor-history.png" width="45%" />
+</p>
+
+![Sensor Card](assets/)![sensor-history]()
 
 ## Installation (via HACS)
 
@@ -41,8 +47,10 @@ then
 4. Restart Home Assistant
 5. Go to **Settings → Devices & Services → Add Integration → Alplakes**
 6. Add as many sensor devices as you like
-![Config Flow](assets/config-flow.png)
 
+<p align="center">
+  <img src="assets/config-flow.png"/>
+</p>
 
 ## Attribution
 
