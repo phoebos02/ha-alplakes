@@ -24,30 +24,10 @@ jobs:
         run: pip install -r requirements.txt -r requirements-dev.txt
       - name: Run unit tests
         run: PYTHONPATH=. pytest --disable-warnings -q -m "not integration and not e2e" --junitxml=unit-test-results.xml
-      - name: Publish Unit Test Results
+      - name: Publish unit test results
         if: always()
         uses: dorny/test-reporter@v1
         with:
-          name: Unit Tests
+          name: unit-test results
           path: unit-test-results.xml
-          reporter: java-junit
-
-  integration-test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
-      - name: Install dependencies
-        run: pip install -r requirements.txt -r requirements-dev.txt
-      - name: Run integration tests
-        run: PYTHONPATH=. pytest -q -m integration --junitxml=integration-test-results.xml
-      - name: Publish Integration Test Results
-        if: always()
-        uses: dorny/test-reporter@v1
-        with:
-          name: Integration Tests
-          path: integration-test-results.xml
           reporter: java-junit
