@@ -26,7 +26,7 @@ steps:
     displayName: 'Type-check with mypy'
 
   - script: |
-      pytest --maxfail=1 --disable-warnings -q
+      pytest --disable-warnings -q
     displayName: 'Run unit tests'
 
   - task: PublishTestResults@2
