@@ -10,5 +10,5 @@
     "issue_tracker": "https://github.com/phoebos02/ha-alplakes/issues",
     "loggers": ["alplakes"],
     "requirements": [],
-    "version": "0.2.1"
+    "version": "0.2.2-alpha.1"
 }

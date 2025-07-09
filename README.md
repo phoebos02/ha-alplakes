@@ -60,6 +60,7 @@ Users must comply with the Alplakes terms of use; for full details, see Eawag's 
 
 This project and its author are not affiliated with Alplakes or Eawag in any way.
 
+This project and its author are not affiliated with Alplakes or Eawag in any way.
 
 ## License
 

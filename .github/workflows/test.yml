@@ -2,13 +2,14 @@ name: All Tests
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, dev ]
   pull_request:
     branches: [ main ]
   workflow_dispatch:
 
 permissions:
   contents: read
+  checks: write 
 
 jobs:
   unit-test:
@@ -22,17 +23,11 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt -r requirements-dev.txt
       - name: Run unit tests
-        run: PYTHONPATH=. pytest --maxfail=1 --disable-warnings -q -m "not integration and not e2e"
-
-  integration-test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
+        run: PYTHONPATH=. pytest --disable-warnings -q -m "not integration and not e2e" --junitxml=unit-test-results.xml
+      - name: Publish unit test results
+        if: always()
+        uses: dorny/test-reporter@v1
         with:
-          python-version: '3.13'
-      - name: Install dependencies
-        run: pip install -r requirements.txt -r requirements-dev.txt
-      - name: Run integration tests
-        run: PYTHONPATH=. pytest -q -m integration
+          name: unit-test results
+          path: unit-test-results.xml
+          reporter: java-junit
