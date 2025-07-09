@@ -2,7 +2,7 @@ name: All Tests
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, dev ]
   pull_request:
     branches: [ main ]
   workflow_dispatch:
@@ -22,7 +22,14 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt -r requirements-dev.txt
       - name: Run unit tests
-        run: PYTHONPATH=. pytest --disable-warnings -q -m "not integration and not e2e"
+        run: PYTHONPATH=. pytest --disable-warnings -q -m "not integration and not e2e" --junitxml=unit-test-results.xml
+      - name: Publish Unit Test Results
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Unit Tests
+          path: unit-test-results.xml
+          reporter: java-junit
 
   integration-test:
     runs-on: ubuntu-latest
@@ -35,4 +42,11 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt -r requirements-dev.txt
       - name: Run integration tests
-        run: PYTHONPATH=. pytest -q -m integration
+        run: PYTHONPATH=. pytest -q -m integration --junitxml=integration-test-results.xml
+      - name: Publish Integration Test Results
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Integration Tests
+          path: integration-test-results.xml
+          reporter: java-junit
