@@ -1,5 +1,7 @@
 import pytest
 
+pytest_plugins = "pytest_homeassistant_custom_component"
+
 @pytest.mark.asyncio
 async def test_flow_user_success(hass):
     """Test completing the user config flow."""
