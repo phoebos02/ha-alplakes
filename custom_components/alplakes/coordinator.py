@@ -1,25 +1,39 @@
-import aiohttp
 import asyncio
 import logging
-from datetime import datetime, timedelta, UTC
+from datetime import UTC, datetime, timedelta
+
+import aiohttp
+
+from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
-from .const import BASE_URL, MODEL
+
+from .const import (
+    BASE_URL,
+    DEFAULT_MODEL,
+    LAKE_API_ID_BY_LAKE,
+    MODEL_BY_LAKE,
+)
+
+_LOGGER = logging.getLogger(__name__)
+
 
 class LakeDataCoordinator(DataUpdateCoordinator):
     def __init__(self, hass, lake, latitude, longitude, depth, scan_interval, location_name):
-        logger = logging.getLogger(__name__)
         super().__init__(
             hass,
-            logger=logger,
+            logger=_LOGGER,
             name="AlplakesCoordinator",
             update_interval=timedelta(minutes=scan_interval),
         )
+
         self.lake = lake
+        self.api_lake = LAKE_API_ID_BY_LAKE.get(lake, lake)
+        self.model = MODEL_BY_LAKE.get(self.api_lake, DEFAULT_MODEL)
         self.latitude = latitude
         self.longitude = longitude
         self.depth = depth
         self.location_name = location_name
-        self.session = aiohttp.ClientSession()
+        self.session = async_get_clientsession(hass)
 
     async def _async_update_data(self):
         try:
@@ -27,22 +41,45 @@ class LakeDataCoordinator(DataUpdateCoordinator):
             start_time = (now - timedelta(hours=4)).strftime("%Y%m%d%H%M")
             end_time = now.strftime("%Y%m%d%H%M")
 
-            url = f"{BASE_URL}/{MODEL}/{self.lake}/{start_time}/{end_time}/{self.depth}/{self.latitude}/{self.longitude}?variables=temperature"
-            async with self.session.get(url, timeout=10) as resp:
-                if resp.status != 200:
-                    raise UpdateFailed(f"HTTP {resp.status} from API")
+            url = (
+                f"{BASE_URL}/{self.model}/{self.api_lake}/{start_time}/{end_time}/"
+                f"{self.depth}/{self.latitude}/{self.longitude}"
+                "?variables=temperature"
+            )
 
-                data = await resp.json()
-                temps = data["variables"]["temperature"]["data"]
-                if not temps:
-                    raise UpdateFailed("No temperature data returned from API")
-                temp = temps[-1]  # Take the last data point
-                return round(float(temp), 1)
+            async with self.session.get(url, timeout=10) as resp:
+                body = await resp.text()
+
+                if resp.status != 200:
+                    _LOGGER.error(
+                        "AlpLakes API returned HTTP %s for URL %s. Body: %s",
+                        resp.status,
+                        url,
+                        body[:1000],
+                    )
+                    raise UpdateFailed(
+                        f"HTTP {resp.status} from API. URL: {url}. Body: {body[:500]}"
+                    )
+
+                try:
+                    data = await resp.json()
+                except Exception as err:
+                    _LOGGER.error(
+                        "AlpLakes API returned non-JSON response for URL %s. Body: %s",
+                        url,
+                        body[:1000],
+                    )
+                    raise UpdateFailed(f"Invalid JSON from API: {err}") from err
+
+            temps = data["variables"]["temperature"]["data"]
+
+            if not temps:
+                raise UpdateFailed("No temperature data returned from API")
+
+            return round(float(temps[-1]), 1)
 
         except UpdateFailed:
             raise
-        except (asyncio.TimeoutError, aiohttp.ClientError, KeyError, IndexError, ValueError) as e:
-            raise UpdateFailed(f"Failed to fetch or parse data: {e}")
 
-    async def async_will_remove_from_hass(self):
-        await self.session.close()
+        except (asyncio.TimeoutError, aiohttp.ClientError, KeyError, IndexError, ValueError) as err:
+            raise UpdateFailed(f"Failed to fetch or parse data: {err}") from err
