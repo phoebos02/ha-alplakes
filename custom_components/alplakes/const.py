@@ -44,5 +44,11 @@ MODEL_BY_LAKE = {
     "thun": "simstrat",
 }
 
+MODEL_NAME_BY_MODEL = {
+    "delft3d-flow": "Delft3D-FLOW",
+    "mitgcm": "MITgcm",
+    "simstrat": "Simstrat",
+}
+
 # Backward-compatible alias for older code importing MODEL.
 MODEL = DEFAULT_MODEL
