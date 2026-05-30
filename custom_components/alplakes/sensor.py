@@ -63,5 +63,5 @@ class LakeTemperatureSensor(CoordinatorEntity, SensorEntity):
                 f"{self.coordinator.location_name.capitalize()}"
             ),
             "manufacturer": "Eawag",
-            "model": f"AlpLakes {self.coordinator.model}",
+            "model": MODEL_NAME_BY_MODEL.get(self.coordinator.model, self.coordinator.model),
         }
