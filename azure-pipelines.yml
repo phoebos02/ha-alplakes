@@ -13,7 +13,7 @@ steps:
 
   - script: |
       python -m pip install --upgrade pip
-      pip install pytest homeassistant pytest-homeassistant-custom-component aiohttp flake8 mypy
+      pip install -r requirements.txt -r requirements-dev.txt
     displayName: 'Install dependencies'
 
   - script: |
@@ -26,7 +26,7 @@ steps:
     displayName: 'Type-check with mypy'
 
   - script: |
-      pytest --disable-warnings -q
+      pytest --disable-warnings -q -m "not integration and not e2e"
     displayName: 'Run unit tests'
 
   - task: PublishTestResults@2

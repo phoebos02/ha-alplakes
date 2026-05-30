@@ -10,6 +10,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN, MODEL_NAME_BY_MODEL
+from .helpers import make_measurement_id
 
 
 async def async_setup_entry(
@@ -39,7 +40,8 @@ class LakeTemperatureSensor(CoordinatorEntity, SensorEntity):
     def __init__(self, coordinator, lake, location_name, lat, lng, depth):
         super().__init__(coordinator)
 
-        self._attr_unique_id = f"lake_{lake}_temp_{location_name}_{depth}"
+        measurement_id = make_measurement_id(lake, location_name, lat, lng, depth)
+        self._attr_unique_id = f"{measurement_id}_temp"
         self._attr_name = (
             f"Lake {lake.capitalize()} Temperature "
             f"{location_name.capitalize()} ({depth} m)"
@@ -63,5 +65,7 @@ class LakeTemperatureSensor(CoordinatorEntity, SensorEntity):
                 f"{self.coordinator.location_name.capitalize()}"
             ),
             "manufacturer": "Eawag",
-            "model": MODEL_NAME_BY_MODEL.get(self.coordinator.model, self.coordinator.model),
+            "model": MODEL_NAME_BY_MODEL.get(
+                self.coordinator.model, self.coordinator.model
+            ),
         }

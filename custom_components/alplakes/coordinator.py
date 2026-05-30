@@ -1,4 +1,5 @@
 import asyncio
+import json
 import logging
 from datetime import UTC, datetime, timedelta
 
@@ -18,7 +19,9 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class LakeDataCoordinator(DataUpdateCoordinator):
-    def __init__(self, hass, lake, latitude, longitude, depth, scan_interval, location_name):
+    def __init__(
+        self, hass, lake, latitude, longitude, depth, scan_interval, location_name
+    ):
         super().__init__(
             hass,
             logger=_LOGGER,
@@ -58,11 +61,12 @@ class LakeDataCoordinator(DataUpdateCoordinator):
                         body[:1000],
                     )
                     raise UpdateFailed(
-                        f"HTTP {resp.status} from API. URL: {url}. Body: {body[:500]}"
+                        f"HTTP {resp.status} from API. URL: {url}. "
+                        f"Body: {body[:500]}"
                     )
 
                 try:
-                    data = await resp.json()
+                    data = json.loads(body)
                 except Exception as err:
                     _LOGGER.error(
                         "AlpLakes API returned non-JSON response for URL %s. Body: %s",
@@ -81,5 +85,12 @@ class LakeDataCoordinator(DataUpdateCoordinator):
         except UpdateFailed:
             raise
 
-        except (asyncio.TimeoutError, aiohttp.ClientError, KeyError, IndexError, ValueError) as err:
+        except (
+            asyncio.TimeoutError,
+            aiohttp.ClientError,
+            KeyError,
+            IndexError,
+            TypeError,
+            ValueError,
+        ) as err:
             raise UpdateFailed(f"Failed to fetch or parse data: {err}") from err
