@@ -1,14 +1,14 @@
-# config_flow.py
 import re
 
 import voluptuous as vol
+
 from homeassistant import config_entries
 from homeassistant.core import callback
 
 from .const import (
     DEFAULT_DEPTH,
-    DEFAULT_LATITUDE,
     DEFAULT_LAKE,
+    DEFAULT_LATITUDE,
     DEFAULT_LOCATION_NAME,
     DEFAULT_LONGITUDE,
     DEFAULT_SCAN_INTERVAL,
@@ -35,7 +35,9 @@ class AlplakesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     vol.Required("latitude", default=DEFAULT_LATITUDE): float,
                     vol.Required("longitude", default=DEFAULT_LONGITUDE): float,
                     vol.Required("depth", default=DEFAULT_DEPTH): vol.Coerce(float),
-                    vol.Required("scan_interval", default=DEFAULT_SCAN_INTERVAL): int,
+                    vol.Required(
+                        "scan_interval", default=DEFAULT_SCAN_INTERVAL
+                    ): vol.All(vol.Coerce(int), vol.Range(min=1)),
                 }
             )
             return self.async_show_form(step_id="user", data_schema=data_schema)
@@ -65,10 +67,10 @@ class AlplakesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
 
 class AlplakesOptionsFlowHandler(config_entries.OptionsFlow):
-    """Handle options (reconfigure scan_interval)."""
+    """Handle options."""
 
     async def async_step_init(self, user_input=None):
-        """Present a form to update only scan_interval."""
+        """Present a form to update scan_interval."""
         initial_interval = self.config_entry.options.get(
             "scan_interval",
             self.config_entry.data.get("scan_interval", DEFAULT_SCAN_INTERVAL),
@@ -77,7 +79,9 @@ class AlplakesOptionsFlowHandler(config_entries.OptionsFlow):
         if user_input is None:
             data_schema = vol.Schema(
                 {
-                    vol.Required("scan_interval", default=initial_interval): int,
+                    vol.Required("scan_interval", default=initial_interval): vol.All(
+                        vol.Coerce(int), vol.Range(min=1)
+                    ),
                 }
             )
             return self.async_show_form(step_id="init", data_schema=data_schema)
