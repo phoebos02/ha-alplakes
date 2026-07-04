@@ -64,8 +64,8 @@ async def _update_with_body(coordinator, body, status=200):
 
     return result, session
 
-
-def test_coordinator_maps_lake_to_api_lake_and_model(hass):
+@pytest.mark.asyncio
+async def test_coordinator_maps_lake_to_api_lake_and_model(hass):
     """Test API lake aliases and model selection."""
     brunnen = _make_coordinator(hass, lake="brunnen")
     zurich = _make_coordinator(hass, lake="zurich")
