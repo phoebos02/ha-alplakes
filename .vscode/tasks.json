@@ -99,9 +99,29 @@
             "problemMatcher": []
         },
         {
+            "label": "Install Dev Requirements",
+            "type": "process",
+            "command": "python",
+            "args": [
+                "-m",
+                "pip",
+                "install",
+                "-r",
+                "requirements-dev.txt"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+        {
             "label": "Run All Tests",
             "dependsOrder": "sequence",
             "dependsOn": [
+                "Install Dev Requirements",
                 "Lint (flake8)",
                 "Type Check (mypy)",
                 "Unit Tests",

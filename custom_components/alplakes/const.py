@@ -17,6 +17,7 @@ VALID_LAKES = [
     "murten",
     "neuchatel",
     "stmoritz",
+    "zug",
     "thun",
     "zurich",
 ]
@@ -26,12 +27,12 @@ LAKE_API_ID_BY_LAKE = {
     "brunnen": "lucerne",
 }
 
-DEFAULT_LAKE = "lucerne"
-DEFAULT_LATITUDE = 47.054076
-DEFAULT_LONGITUDE = 8.318766
+DEFAULT_LAKE = "zurich"
+DEFAULT_LATITUDE = 47.255
+DEFAULT_LONGITUDE = 8.688
 DEFAULT_DEPTH = 0.1
 DEFAULT_SCAN_INTERVAL = 10
-DEFAULT_LOCATION_NAME = "Luzern"
+DEFAULT_LOCATION_NAME = "Männedorf"
 
 BASE_URL = "https://alplakes-api.eawag.ch/simulations/point"
 
@@ -41,6 +42,7 @@ DEFAULT_MODEL = "delft3d-flow"
 MODEL_BY_LAKE = {
     "lucerne": "mitgcm",
     "neuchatel": "mitgcm",
+    "zug": "mitgcm",
     "thun": "simstrat",
 }
 
