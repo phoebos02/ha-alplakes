@@ -21,18 +21,11 @@ def _user_schema():
         {
             vol.Required("lake", default=DEFAULT_LAKE): vol.In(VALID_LAKES),
             vol.Required("location_name", default=DEFAULT_LOCATION_NAME): str,
-            vol.Required("latitude", default=DEFAULT_LATITUDE): vol.All(
-                vol.Coerce(float), vol.Range(min=-90, max=90)
-            ),
-            vol.Required("longitude", default=DEFAULT_LONGITUDE): vol.All(
-                vol.Coerce(float), vol.Range(min=-180, max=180)
-            ),
-            vol.Required("depth", default=DEFAULT_DEPTH): vol.All(
-                vol.Coerce(float), vol.Range(min=0)
-            ),
-            vol.Required("scan_interval", default=DEFAULT_SCAN_INTERVAL): vol.All(
-                vol.Coerce(int), vol.Range(min=1)
-            ),
+            # Coerce types here but perform range checks in the step
+            vol.Required("latitude", default=DEFAULT_LATITUDE): vol.Coerce(float),
+            vol.Required("longitude", default=DEFAULT_LONGITUDE): vol.Coerce(float),
+            vol.Required("depth", default=DEFAULT_DEPTH): vol.Coerce(float),
+            vol.Required("scan_interval", default=DEFAULT_SCAN_INTERVAL): vol.Coerce(int),
         }
     )
 
@@ -61,6 +54,48 @@ class AlplakesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 step_id="user", data_schema=data_schema, errors=errors
             )
 
+        # Manual range validation so Home Assistant doesn't raise InvalidData
+        errors = {}
+        try:
+            latitude = float(self.data.get("latitude"))
+        except (TypeError, ValueError):
+            errors["latitude"] = "invalid"
+            latitude = None
+
+        try:
+            longitude = float(self.data.get("longitude"))
+        except (TypeError, ValueError):
+            errors["longitude"] = "invalid"
+            longitude = None
+
+        try:
+            depth = float(self.data.get("depth"))
+        except (TypeError, ValueError):
+            errors["depth"] = "invalid"
+            depth = None
+
+        try:
+            scan_interval = int(self.data.get("scan_interval"))
+        except (TypeError, ValueError):
+            errors["scan_interval"] = "invalid"
+            scan_interval = None
+
+        if latitude is not None and not (-90 <= latitude <= 90):
+            errors["latitude"] = "invalid"
+
+        if longitude is not None and not (-180 <= longitude <= 180):
+            errors["longitude"] = "invalid"
+
+        if depth is not None and depth < 0:
+            errors["depth"] = "invalid"
+
+        if scan_interval is not None and scan_interval < 1:
+            errors["scan_interval"] = "invalid"
+
+        if errors:
+            return self.async_show_form(step_id="user", data_schema=data_schema, errors=errors)
+
+        # Normalize and continue
         self.data["location_name"] = sanitize_location_name(self.data["location_name"])
 
         unique_id = make_measurement_id(
