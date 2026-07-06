@@ -6,8 +6,7 @@ from custom_components.alplakes.coordinator import LakeDataCoordinator
 @pytest.mark.enable_socket
 @pytest.mark.integration
 @pytest.mark.asyncio
-@pytest.mark.allow_hosts(['127.0.0.1', '152.88.10.20'])
-async def test_live_alplakes_fetch(socket_enabled):
+async def test_live_alplakes_fetch(hass, socket_enabled):
     """Live integration test against alplakes.eawag.ch API."""
     # Zürichsee station location
     lat = 47.25686
@@ -15,7 +14,7 @@ async def test_live_alplakes_fetch(socket_enabled):
     depth = 0.35
 
     coord = LakeDataCoordinator(
-        hass=None,
+        hass=hass,
         lake="zurich",
         latitude=lat,
         longitude=lon,

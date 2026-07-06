@@ -1,50 +1,71 @@
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.components.sensor import (
+    SensorDeviceClass,
+    SensorEntity,
+    SensorStateClass,
+)
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import UnitOfTemperature
 from homeassistant.core import HomeAssistant
-from .coordinator import LakeDataCoordinator
-from homeassistant.components.sensor import SensorEntity
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback):
-    data = entry.data
-    lake = data["lake"]
-    location_name = data["location_name"]
-    lat = data["latitude"]
-    lng = data["longitude"]
-    depth = data["depth"]
-    interval = data["scan_interval"]
+from .const import DOMAIN, MODEL_NAME_BY_MODEL
+from .helpers import make_measurement_id
 
-    coordinator = LakeDataCoordinator(hass, lake, lat, lng, depth, interval, location_name)
-    await coordinator.async_config_entry_first_refresh()
-    async_add_entities([LakeTemperatureSensor(coordinator, lake, location_name, lat, lng, depth)])
 
-class LakeTemperatureSensor(SensorEntity):
+async def async_setup_entry(
+    hass: HomeAssistant,
+    entry: ConfigEntry,
+    async_add_entities: AddEntitiesCallback,
+) -> None:
+    runtime_data = hass.data[DOMAIN][entry.entry_id]
+    coordinator = runtime_data["coordinator"]
+    data = runtime_data["config"]
+
+    async_add_entities(
+        [
+            LakeTemperatureSensor(
+                coordinator,
+                data["lake"],
+                data["location_name"],
+                data["latitude"],
+                data["longitude"],
+                data["depth"],
+            )
+        ]
+    )
+
+
+class LakeTemperatureSensor(CoordinatorEntity, SensorEntity):
     def __init__(self, coordinator, lake, location_name, lat, lng, depth):
-        self.coordinator = coordinator
-        self._attr_unique_id = f"lake_{lake}_temp_{location_name}_{depth}"
-        self._attr_name = f"Lake {lake.capitalize()} Temperature {location_name.capitalize()} ({depth} m)"
-        self._attr_native_unit_of_measurement = "°C"
-        self._attr_attribution = "Data provided by Alplakes / Eawag"
+        super().__init__(coordinator)
 
-    @property
-    def icon(self):
-        return "mdi:coolant-temperature"
+        measurement_id = make_measurement_id(lake, location_name, lat, lng, depth)
+        self._attr_unique_id = f"{measurement_id}_temp"
+        self._attr_name = (
+            f"Lake {lake.capitalize()} Temperature "
+            f"{location_name.capitalize()} ({depth} m)"
+        )
+        self._attr_native_unit_of_measurement = UnitOfTemperature.CELSIUS
+        self._attr_device_class = SensorDeviceClass.TEMPERATURE
+        self._attr_state_class = SensorStateClass.MEASUREMENT
+        self._attr_icon = "mdi:coolant-temperature"
+        self._attr_attribution = "Data provided by Alplakes / Eawag"
 
     @property
     def native_value(self):
         return self.coordinator.data
 
     @property
-    def available(self):
-        return self.coordinator.last_update_success
-
-    @property
     def device_info(self):
         return {
             "identifiers": {("alplakes", self.unique_id)},
-            "name": f"Alplakes – Lake {self.coordinator.lake.capitalize()} - {self.coordinator.location_name.capitalize()}",
+            "name": (
+                f"Alplakes – Lake {self.coordinator.lake.capitalize()} - "
+                f"{self.coordinator.location_name.capitalize()}"
+            ),
             "manufacturer": "Eawag",
-            "model": "Delft3D-Flow",
+            "model": MODEL_NAME_BY_MODEL.get(
+                self.coordinator.model, self.coordinator.model
+            ),
         }
-
-    async def async_added_to_hass(self):
-        self.coordinator.async_add_listener(self.async_write_ha_state)

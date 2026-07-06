@@ -10,7 +10,7 @@
 [![License: BSD-3-Clause](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg?style=flat-square)](https://github.com/phoebos02/ha-alplakes/?tab=BSD-3-Clause-1-ov-file)
 [![HACS](https://github.com/phoebos02/ha-alplakes/actions/workflows/hacs.yml/badge.svg)](https://github.com/phoebos02/ha-alplakes/actions/workflows/hacs.yml)
 [![Hassfest](https://github.com/phoebos02/ha-alplakes/actions/workflows/hassfest.yml/badge.svg)](https://github.com/phoebos02/ha-alplakes/actions/workflows/hassfest.yml)
-[![CI](https://github.com/phoebos02/ha-alplakes/actions/workflows/ci.yml/badge.svg)](https://github.com/phoebos02/ha-alplakes/actions/workflows/ci.yml)
+[![Build](https://github.com/phoebos02/ha-alplakes/actions/workflows/ci.yml/badge.svg)](https://github.com/phoebos02/ha-alplakes/actions/workflows/ci.yml)
 [![Tests](https://github.com/phoebos02/ha-alplakes/actions/workflows/test.yml/badge.svg)](https://github.com/phoebos02/ha-alplakes/actions/workflows/test.yml)
 
 Alplakes is a Home Assistant custom integration that fetches lake temperature data from the Eawag Alplakes API (simulations, Delft3D-Flow model) and exposes it as sensor entities. Each configured “point” (lake, latitude, longitude, depth) becomes one temperature sensor, updated on a user-configurable interval.
