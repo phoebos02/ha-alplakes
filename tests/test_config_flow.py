@@ -12,7 +12,7 @@ from custom_components.alplakes.const import (
     DEFAULT_SCAN_INTERVAL,
     DOMAIN,
 )
-from custom_components.alplakes.helpers import make_measurement_id
+from custom_components.alplakes.helpers import make_measurement_id, sanitize_location_name
 
 
 USER_INPUT = {
@@ -55,11 +55,13 @@ async def test_flow_user_success(hass):
     result = await _configure_user_flow(hass, USER_INPUT)
 
     assert result["type"] is FlowResultType.CREATE_ENTRY
-    assert result["title"] == "Lake Lucerne - Luzern (47.054076, 8.318766)"
-    assert result["data"] == {
-        **USER_INPUT,
-        "location_name": "luzern",
-    }
+    expected_title = (
+        f"Lake {DEFAULT_LAKE.capitalize()} - "
+        f"{sanitize_location_name(DEFAULT_LOCATION_NAME).capitalize()} "
+        f"({DEFAULT_LATITUDE}, {DEFAULT_LONGITUDE})"
+    )
+    assert result["title"] == expected_title
+    assert result["data"] == {**USER_INPUT, "location_name": sanitize_location_name(DEFAULT_LOCATION_NAME)}
 
 
 @pytest.mark.asyncio
