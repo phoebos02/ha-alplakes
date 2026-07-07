@@ -6,7 +6,7 @@ import pytest
 
 from homeassistant.helpers.update_coordinator import UpdateFailed
 
-from custom_components.alplakes.const import BASE_URL
+from custom_components.alplakes.const import BASE_URL, ONE_D_BASE_URL
 from custom_components.alplakes.coordinator import LakeDataCoordinator
 
 
@@ -71,13 +71,28 @@ async def test_coordinator_maps_lake_to_api_lake_and_model(hass):
     zurich = _make_coordinator(hass, lake="zurich")
     thun = _make_coordinator(hass, lake="thun")
     neuchatel = _make_coordinator(hass, lake="neuchatel")
+    pfaffikersee = _make_coordinator(hass, lake="pfaffikersee")
+    wolfgangsee = _make_coordinator(hass, lake="wolfgangsee")
+    aegeri = _make_coordinator(hass, lake="aegeri")
 
     assert brunnen.api_lake == "lucerne"
     assert brunnen.model == "mitgcm"
+    assert brunnen.is_1d is False
     assert zurich.api_lake == "zurich"
     assert zurich.model == "delft3d-flow"
+    assert zurich.is_1d is False
     assert thun.model == "simstrat"
+    assert thun.is_1d is True
     assert neuchatel.model == "mitgcm"
+    assert neuchatel.is_1d is False
+    assert pfaffikersee.api_lake == "pfaffikon"
+    assert pfaffikersee.model == "simstrat"
+    assert pfaffikersee.is_1d is True
+    assert wolfgangsee.model == "simstrat"
+    assert wolfgangsee.is_1d is True
+    assert aegeri.api_lake == "ageri"
+    assert aegeri.model == "delft3d-flow"
+    assert aegeri.is_1d is False
 
 
 @pytest.mark.asyncio
@@ -92,6 +107,45 @@ async def test_coordinator_builds_url_with_api_lake_and_model(hass):
     assert session.requested_timeout == 10
     assert session.requested_url == (
         f"{BASE_URL}/mitgcm/lucerne/202605300800/202605301200/"
+        "0.1/47.25686/8.69893?variables=temperature"
+    )
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ("lake", "api_lake"),
+    [
+        ("pfaffikersee", "pfaffikon"),
+        ("wolfgangsee", "wolfgangsee"),
+    ],
+)
+async def test_coordinator_builds_1d_url_for_non_3d_lakes(hass, lake, api_lake):
+    """Test 1d Simstrat lakes use the 1d point API without coordinates."""
+    coordinator = _make_coordinator(hass, lake=lake, depth=1)
+    body = json.dumps({"variables": {"T": {"data": [10.0, 12.34]}}})
+
+    result, session = await _update_with_body(coordinator, body)
+
+    assert result == 12.3
+    assert session.requested_timeout == 10
+    assert session.requested_url == (
+        f"{ONE_D_BASE_URL}/simstrat/{api_lake}/202605300800/202605301200/"
+        "1?variables=T"
+    )
+
+
+@pytest.mark.asyncio
+async def test_coordinator_uses_3d_when_lake_exists_in_both_apis(hass):
+    """Test a lake present in both metadata sets keeps the 3d endpoint."""
+    coordinator = _make_coordinator(hass, lake="biel", depth=0.1)
+    body = json.dumps({"variables": {"temperature": {"data": [10.0, 12.34]}}})
+
+    result, session = await _update_with_body(coordinator, body)
+
+    assert result == 12.3
+    assert coordinator.is_1d is False
+    assert session.requested_url == (
+        f"{BASE_URL}/delft3d-flow/biel/202605300800/202605301200/"
         "0.1/47.25686/8.69893?variables=temperature"
     )
 

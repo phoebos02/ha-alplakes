@@ -13,6 +13,9 @@ from .const import (
     DEFAULT_MODEL,
     LAKE_API_ID_BY_LAKE,
     MODEL_BY_LAKE,
+    ONE_D_BASE_URL,
+    ONE_D_LAKE_IDS,
+    ONE_D_MODEL,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -31,6 +34,7 @@ class LakeDataCoordinator(DataUpdateCoordinator):
 
         self.lake = lake
         self.api_lake = LAKE_API_ID_BY_LAKE.get(lake, lake)
+        self.is_1d = self.api_lake in ONE_D_LAKE_IDS
         self.model = MODEL_BY_LAKE.get(self.api_lake, DEFAULT_MODEL)
         self.latitude = latitude
         self.longitude = longitude
@@ -44,11 +48,18 @@ class LakeDataCoordinator(DataUpdateCoordinator):
             start_time = (now - timedelta(hours=4)).strftime("%Y%m%d%H%M")
             end_time = now.strftime("%Y%m%d%H%M")
 
-            url = (
-                f"{BASE_URL}/{self.model}/{self.api_lake}/{start_time}/{end_time}/"
-                f"{self.depth}/{self.latitude}/{self.longitude}"
-                "?variables=temperature"
-            )
+            variable = "T" if self.is_1d else "temperature"
+            if self.is_1d:
+                url = (
+                    f"{ONE_D_BASE_URL}/{ONE_D_MODEL}/{self.api_lake}/"
+                    f"{start_time}/{end_time}/{self.depth}?variables={variable}"
+                )
+            else:
+                url = (
+                    f"{BASE_URL}/{self.model}/{self.api_lake}/{start_time}/{end_time}/"
+                    f"{self.depth}/{self.latitude}/{self.longitude}"
+                    f"?variables={variable}"
+                )
 
             async with self.session.get(url, timeout=10) as resp:
                 body = await resp.text()
@@ -75,7 +86,7 @@ class LakeDataCoordinator(DataUpdateCoordinator):
                     )
                     raise UpdateFailed(f"Invalid JSON from API: {err}") from err
 
-            temps = data["variables"]["temperature"]["data"]
+            temps = data["variables"][variable]["data"]
 
             if not temps:
                 raise UpdateFailed("No temperature data returned from API")
