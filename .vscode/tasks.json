@@ -10,6 +10,7 @@
                 "flake8",
                 "."
             ],
+            "dependsOn": ["Install Dev Requirements"],
             
             "group": "test",
             "presentation": {
@@ -28,6 +29,7 @@
                 "mypy",
                 "custom_components/alplakes"
             ],
+            "dependsOn": ["Install Dev Requirements"],
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -51,6 +53,7 @@
                 "-m",
                 "not integration and not e2e"
             ],
+            "dependsOn": ["Install Dev Requirements"],
             "group": "test",
             "presentation": {
                 "reveal": "always",
@@ -70,6 +73,7 @@
                 "-m",
                 "integration"
             ],
+            "dependsOn": ["Install Dev Requirements"],
             "group": "test",
             "presentation": {
                 "reveal": "always",
@@ -90,6 +94,7 @@
                 "-m",
                 "e2e"
             ],
+            "dependsOn": ["Install Dev Requirements"],
             "group": "test",
             "presentation": {
                 "reveal": "always",
