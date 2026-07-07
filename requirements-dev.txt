@@ -1,7 +1,7 @@
 # requirements-dev.txt
 pytest>=9.0.3
 pytest-asyncio>=1.4.0
-pytest-homeassistant-custom-component>=0.13.345
+pytest-homeassistant-custom-component>=0.13.300
 aresponses
 flake8
 mypy
