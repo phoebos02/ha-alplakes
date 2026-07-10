@@ -6,7 +6,7 @@
 </p>
 
 [![Release](https://img.shields.io/github/v/release/phoebos02/ha-alplakes?style=flat-square)](https://github.com/phoebos02/ha-alplakes/releases/latest)
-[![HACS](https://img.shields.io/badge/HACS-custom-orange?style=flat-square)](https://hacs.xyz/)
+[![HACS](https://img.shields.io/badge/HACS-custom-purple?style=flat-square)](https://hacs.xyz/)
 [![License: BSD-3-Clause](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg?style=flat-square)](https://github.com/phoebos02/ha-alplakes/?tab=BSD-3-Clause-1-ov-file)
 [![HACS](https://github.com/phoebos02/ha-alplakes/actions/workflows/hacs.yml/badge.svg)](https://github.com/phoebos02/ha-alplakes/actions/workflows/hacs.yml)
 [![Hassfest](https://github.com/phoebos02/ha-alplakes/actions/workflows/hassfest.yml/badge.svg)](https://github.com/phoebos02/ha-alplakes/actions/workflows/hassfest.yml)
