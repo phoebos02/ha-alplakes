@@ -1,9 +1,9 @@
 name: Validate with HACS
 on:
   push:
-    branches: [ main ]
+    branches: [ main, dev ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, dev ]
   workflow_dispatch:   # Allows manual triggering
   schedule:
     - cron: "0 0 * * *"
