@@ -58,7 +58,7 @@ This integration uses data from the [Alplakes API](https://alplakes.eawag.ch), d
 maintained by [Eawag – Swiss Federal Institute of Aquatic Science and Technology](https://www.eawag.ch).  
 Users must comply with the Alplakes terms of use; for full details, see Eawag's [Legal Notice](https://www.eawag.ch/en/dataprotection-disclaimer-legalnotice) and [AGB](https://www.eawag.ch/en/agb).
 
-This project and its author are not affiliated with Alplakes or Eawag in any way.
+The Alplakes name and logo are copyright of [Alplakes](https://alplakes.eawag.ch/about)
 
 This project and its author are not affiliated with Alplakes or Eawag in any way.
 
